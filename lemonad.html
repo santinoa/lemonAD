@@ -7,9 +7,7 @@
     <style>
         body { background-color: #1e1e1e; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
         .alerta { color: #ff4c4c; font-weight: bold; font-size: 20px; }
-        .ad-container { margin-top: 30px; padding: 25px; border: 2px dashed #555; border-radius: 10px; background-color: #2a2a2a; }
-        .ad-btn { display: inline-block; padding: 12px 25px; background-color: #ff4c4c; color: white; text-decoration: none; font-size: 18px; font-weight: bold; border-radius: 8px; border: 2px solid white; transition: 0.2s; }
-        .ad-btn:hover { background-color: #ff2a2a; transform: scale(1.05); }
+        .ad-container { margin-top: 30px; padding: 25px; border: 2px dashed #555; border-radius: 10px; background-color: #2a2a2a; min-height: 100px; display: flex; justify-content: center; align-items: center; flex-direction: column; }
         .input-box { padding: 12px; font-size: 16px; width: 250px; border-radius: 5px; border: none; text-align: center; margin-right: 10px; }
         .registrar-btn { padding: 12px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
         .registrar-btn:hover { background-color: #45a049; }
@@ -27,22 +25,34 @@
         <button onclick="iniciarVerificacion()" class="registrar-btn">Conectar</button>
     </div>
 
-    <!-- PASO 2: Mostrar anuncios y mantener latido una vez escrito el usuario -->
+    <!-- PASO 2: Anuncios automáticos y latido -->
     <div id="panelActivo">
-        <p class="alerta">⚠️ NO CIERRES ESTÁ PÁGINA ⚠️</p>
+        <p class="alerta">⚠️ NO CIERRES ESTA PÁGINA ⚠️</p>
         <p>Conectado como: <strong id="nombreMostrado" style="color: #4CAF50;"></strong></p>
-        <p>Si cierras esta pestaña, serás expulsado del juego.</p>
+        <p>Si cierras esta pestaña, serás expulsado del juego automáticamente.</p>
 
         <div class="ad-container">
-            <p>Apoya este script haciendo clic aquí:</p>
-            <a href="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f" target="_blank" class="ad-btn">
-                Ver Anuncio Patrocinado
-            </a>
+            <p style="color: #aaa; margin-bottom: 10px;">Publicidad Patrocinada:</p>
+            
+            <!-- AQUÍ VA EL CÓDIGO DE ANUNCIO AUTOMÁTICO DE ADSTERRA (Banner o Social Bar) -->
+            <!-- Si tienes un código de banner tipo script de Adsterra, pégalo aquí abajo: -->
+            
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : 'bd2fca3e002c291d9ace7b7e65943b8f',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
+
         </div>
     </div>
 
     <script>
-        let intervaloLatido = null;
+        let firebaseUrl = "";
 
         function iniciarVerificacion() {
             const usuario = document.getElementById('userInput').value.trim();
@@ -52,12 +62,11 @@
                 return;
             }
 
-            // Ocultar panel de texto y mostrar panel activo de anuncios
             document.getElementById('panelVerificacion').style.display = 'none';
             document.getElementById('panelActivo').style.display = 'block';
             document.getElementById('nombreMostrado').innerText = usuario;
 
-            const firebaseUrl = `https://data-base-4e0f8-default-rtdb.firebaseio.com/usuarios/${usuario}.json`;
+            firebaseUrl = `https://data-base-4e0f8-default-rtdb.firebaseio.com/usuarios/${usuario}.json`;
 
             function enviarLatido() {
                 const tiempoActual = Math.floor(Date.now() / 1000); 
@@ -68,11 +77,16 @@
                 }).catch(error => console.error("Error al enviar latido:", error));
             }
 
-            // Enviar primer latido y repetir cada 5 segundos
             enviarLatido();
-            if (intervaloLatido) clearInterval(intervaloLatido);
-            intervaloLatido = setInterval(enviarLatido, 5000);
+            setInterval(enviarLatido, 5000); 
         }
+
+        // TRUCO DE CIERRE: Si el usuario cierra o recarga la pestaña, borramos el latido al instante
+        window.addEventListener('beforeunload', function () {
+            if (firebaseUrl) {
+                navigator.sendBeacon(firebaseUrl, JSON.stringify({ ultimo_latido: 0 }));
+            }
+        });
     </script>
 </body>
 </html>
