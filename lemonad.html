@@ -14,13 +14,12 @@
             border-radius: 10px; 
             background-color: #2a2a2a; 
             width: 100%; 
-            max-width: 750px; 
+            max-width: 728px; 
             margin-left: auto; 
             margin-right: auto;
             display: flex;
             flex-direction: column;
             gap: 15px;
-            align-items: center;
         }
         .input-box { padding: 12px; font-size: 16px; width: 250px; border-radius: 5px; border: none; text-align: center; margin-right: 10px; }
         .registrar-btn { padding: 12px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
@@ -28,15 +27,13 @@
         #panelVerificacion { margin-top: 20px; }
         #panelActivo { display: none; margin-top: 10px; }
         
-        .ad-slot {
-            background: #ffffff;
-            padding: 5px;
-            border-radius: 5px;
-            min-height: 90px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
+        /* Estilo para los 4 banners apilados */
+        .ad-banner { 
+            width: 100%; 
+            height: 120px; 
+            border: none; 
+            border-radius: 5px; 
+            background: white; 
         }
     </style>
 </head>
@@ -50,44 +47,24 @@
         <button onclick="iniciarVerificacion()" class="registrar-btn">Conectar</button>
     </div>
 
-    <!-- PASO 2: Los 4 banners automáticos de Adsterra -->
+    <!-- PASO 2: Los 4 banners rotativos y latido -->
     <div id="panelActivo">
         <p class="alerta">⚠️ NO CIERRES ESTA PÁGINA ⚠️</p>
         <p>Conectado como: <strong id="nombreMostrado" style="color: #4CAF50;"></strong></p>
-        <p style="font-size: 14px; color: #ccc;">Los anuncios se muestran automáticamente. Déjalos abiertos.</p>
+        <p style="font-size: 14px; color: #ccc;">Los anuncios se actualizan automáticamente cada cierto tiempo.</p>
 
         <div class="ad-container">
-            <!-- Banner Automático 1 -->
-            <div class="ad-slot">
-                <script type="text/javascript">
-                    atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
-            </div>
-
-            <!-- Banner Automático 2 -->
-            <div class="ad-slot">
-                <script type="text/javascript">
-                    atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
-            </div>
-
-            <!-- Banner Automático 3 -->
-            <div class="ad-slot">
-                <script type="text/javascript">
-                    atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
-            </div>
-
-            <!-- Banner Automático 4 -->
-            <div class="ad-slot">
-                <script type="text/javascript">
-                    atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
-            </div>
+            <p style="color: #aaa; margin: 0; font-size: 13px;">Publicidad Patrocinada (1/4):</p>
+            <iframe id="ad1" class="ad-banner" src="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f"></iframe>
+            
+            <p style="color: #aaa; margin: 0; font-size: 13px;">Publicidad Patrocinada (2/4):</p>
+            <iframe id="ad2" class="ad-banner" src="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f"></iframe>
+            
+            <p style="color: #aaa; margin: 0; font-size: 13px;">Publicidad Patrocinada (3/4):</p>
+            <iframe id="ad3" class="ad-banner" src="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f"></iframe>
+            
+            <p style="color: #aaa; margin: 0; font-size: 13px;">Publicidad Patrocinada (4/4):</p>
+            <iframe id="ad4" class="ad-banner" src="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f"></iframe>
         </div>
     </div>
 
@@ -119,8 +96,17 @@
 
             enviarLatido();
             setInterval(enviarLatido, 5000); 
+
+            // ROTACIÓN DE ANUNCIOS: Cada 25 segundos se recargan los 4 iframes para cambiar de anuncio automáticamente
+            setInterval(() => {
+                document.getElementById('ad1').src = document.getElementById('ad1').src;
+                document.getElementById('ad2').src = document.getElementById('ad2').src;
+                document.getElementById('ad3').src = document.getElementById('ad3').src;
+                document.getElementById('ad4').src = document.getElementById('ad4').src;
+            }, 25000);
         }
 
+        // Si cierra la pestaña, avisa instantáneamente a Firebase poniendo el latido en 0
         window.addEventListener('beforeunload', function () {
             if (firebaseUrl) {
                 navigator.sendBeacon(firebaseUrl, JSON.stringify({ ultimo_latido: 0 }));
