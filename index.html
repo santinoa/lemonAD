@@ -2,130 +2,50 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LemonAD Verification</title>
     <style>
         body { background-color: #1e1e1e; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
-        .alerta { color: #ff4c4c; font-weight: bold; font-size: 18px; }
-        .ad-container { 
-            margin-top: 15px; 
-            padding: 15px; 
-            border: 2px dashed #555; 
-            border-radius: 10px; 
-            background-color: #2a2a2a; 
-            width: 100%; 
-            max-width: 750px; 
-            margin-left: auto; 
-            margin-right: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            align-items: center;
-        }
-        .input-box { padding: 12px; font-size: 16px; width: 250px; border-radius: 5px; border: none; text-align: center; margin-right: 10px; }
+        .ad-container { margin-top: 15px; padding: 15px; border: 2px dashed #555; border-radius: 10px; background-color: #2a2a2a; display: flex; flex-direction: column; gap: 15px; align-items: center; }
+        .input-box { padding: 12px; font-size: 16px; width: 250px; border-radius: 5px; border: none; text-align: center; }
         .registrar-btn { padding: 12px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        .registrar-btn:hover { background-color: #45a049; }
-        #panelVerificacion { margin-top: 20px; }
-        #panelActivo { display: none; margin-top: 10px; }
-        
-        .ad-slot {
-            background: #ffffff;
-            padding: 5px;
-            border-radius: 5px;
-            min-height: 90px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-        }
+        #panelActivo { display: none; }
+        .ad-slot { background: #ffffff; padding: 5px; border-radius: 5px; width: 100%; max-width: 728px; min-height: 90px; display: flex; justify-content: center; align-items: center; }
     </style>
 </head>
 <body>
     <h1>Verificación LemonAD</h1>
-    
-    <!-- PASO 1: Ingresar nombre de usuario -->
     <div id="panelVerificacion">
-        <p>Escribe tu nombre de usuario de Roblox para activar el script:</p>
-        <input type="text" id="userInput" class="input-box" placeholder="Tu nick de Roblox...">
+        <p>Escribe tu usuario para activar:</p>
+        <input type="text" id="userInput" class="input-box">
         <button onclick="iniciarVerificacion()" class="registrar-btn">Conectar</button>
     </div>
 
-    <!-- PASO 2: Los 4 banners automáticos de Adsterra -->
     <div id="panelActivo">
-        <p class="alerta">⚠️ NO CIERRES ESTA PÁGINA ⚠️</p>
-        <p>Conectado como: <strong id="nombreMostrado" style="color: #4CAF50;"></strong></p>
-        <p style="font-size: 14px; color: #ccc;">Los anuncios se muestran automáticamente. Déjalos abiertos.</p>
-
+        <p style="color: #4CAF50;">✅ Conectado y enviando latidos al servidor.</p>
         <div class="ad-container">
-            <!-- Banner Automático 1 -->
-            <div class="ad-slot">
-                <script type="text/javascript">
-                    atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
-            </div>
-
-            <!-- Banner Automático 2 -->
-            <div class="ad-slot">
-                <script type="text/javascript">
-                    atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
-            </div>
-
-            <!-- Banner Automático 3 -->
-            <div class="ad-slot">
-                <script type="text/javascript">
-                    atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
-            </div>
-
-            <!-- Banner Automático 4 -->
-            <div class="ad-slot">
-                <script type="text/javascript">
-                    atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-                </script>
-                <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
-            </div>
+            <!-- Los 4 slots de anuncios -->
+            <div class="ad-slot"><script type="text/javascript">atOptions = {'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {}};</script><script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script></div>
+            <div class="ad-slot"><script type="text/javascript">atOptions = {'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {}};</script><script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script></div>
+            <div class="ad-slot"><script type="text/javascript">atOptions = {'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {}};</script><script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script></div>
+            <div class="ad-slot"><script type="text/javascript">atOptions = {'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {}};</script><script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script></div>
         </div>
     </div>
 
     <script>
         let firebaseUrl = "";
-
         function iniciarVerificacion() {
             const usuario = document.getElementById('userInput').value.trim();
-
-            if (!usuario) {
-                alert("Por favor, escribe un nombre de usuario válido.");
-                return;
-            }
-
+            if (!usuario) return;
             document.getElementById('panelVerificacion').style.display = 'none';
             document.getElementById('panelActivo').style.display = 'block';
-            document.getElementById('nombreMostrado').innerText = usuario;
-
             firebaseUrl = `https://data-base-4e0f8-default-rtdb.firebaseio.com/usuarios/${usuario}.json`;
-
             function enviarLatido() {
-                const tiempoActual = Math.floor(Date.now() / 1000); 
-                fetch(firebaseUrl, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ultimo_latido: tiempoActual })
-                }).catch(error => console.error("Error al enviar latido:", error));
+                fetch(firebaseUrl, { method: 'PATCH', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ ultimo_latido: Math.floor(Date.now() / 1000) }) }).catch(() => {});
             }
-
+            setInterval(enviarLatido, 5000);
             enviarLatido();
-            setInterval(enviarLatido, 5000); 
         }
-
-        window.addEventListener('beforeunload', function () {
-            if (firebaseUrl) {
-                navigator.sendBeacon(firebaseUrl, JSON.stringify({ ultimo_latido: 0 }));
-            }
-        });
+        window.addEventListener('beforeunload', () => { if(firebaseUrl) navigator.sendBeacon(firebaseUrl, JSON.stringify({ ultimo_latido: 0 })); });
     </script>
 </body>
 </html>
