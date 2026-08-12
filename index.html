@@ -14,10 +14,9 @@
         
         .consola-web { background: #000; color: #0f0; font-family: monospace; padding: 10px; border-radius: 5px; font-size: 12px; margin-top: 10px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
         
-        /* Contenedor visual del banner */
+        /* Contenedor exacto del banner publicitario */
         .ad-slot { background: #ffffff; padding: 2px; border-radius: 5px; width: 728px; height: 90px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-        .ad-slot iframe { width: 728px; height: 90px; border: none; background: transparent; }
-
+        
         /* PANTALLA DE BLOQUEO PARA BRAVE Y ADBLOCK */
         #pantallaAdBlock {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
@@ -49,7 +48,6 @@
         
         <div class="consola-web" id="consolaWeb">Iniciando conexión con Firebase...</div>
 
-        <!-- Contenedores donde se cargarán los iframes de anuncios visibles -->
         <div class="ad-container">
             <div class="ad-slot" id="slot1"></div>
             <div class="ad-slot" id="slot2"></div>
@@ -59,17 +57,53 @@
     </div>
 
     <script>
-        // CÓDIGO HTML AISLADO PARA EL ANUNCIO (Garantiza que Adsterra renderice sin errores)
-        const adHtmlContent = `<!DOCTYPE html><html><head><style>body{margin:0;padding:0;background:#fff;display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden;}</style></head><body><script type="text/javascript">atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };<\/script><script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"><\/script></body></html>`;
+        // FUNCIÓN PARA RENDERIZAR EL ANUNCIO CORRECTAMENTE EN UN ENTORNO AISLADO
+        function cargarAnuncioEnSlot(slotId) {
+            const contenedor = document.getElementById(slotId);
+            if (!contenedor) return;
 
-        // FUNCIÓN PARA CARGAR O ROTAR LOS ANUNCIOS (Genera nuevas impresiones y más dinero)
-        function actualizarAnunciosVisibles() {
-            const slots = ['slot1', 'slot2', 'slot3', 'slot4'];
-            slots.forEach(slotId => {
-                const contenedor = document.getElementById(slotId);
-                if (contenedor) {
-                    contenedor.innerHTML = `<iframe srcdoc="${adHtmlContent.replace(/"/g, '&quot;')}" scrolling="no" frameborder="0"></iframe>`;
-                }
+            contenedor.innerHTML = ""; // Limpia y prepara para la rotación
+
+            const iframe = document.createElement('iframe');
+            iframe.width = "728";
+            iframe.height = "90";
+            iframe.style.border = "none";
+            iframe.style.overflow = "hidden";
+            iframe.scrolling = "no";
+            
+            contenedor.appendChild(iframe);
+
+            // Escribimos de forma segura dentro del documento del iframe para evitar errores de renderizado
+            const doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body { margin: 0; padding: 0; background: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+                    </style>
+                </head>
+                <body>
+                    <script type="text/javascript">
+                        atOptions = {
+                            'key' : 'bd2fca3e002c291d9ace7b7e65943b8f',
+                            'format' : 'iframe',
+                            'height' : 90,
+                            'width' : 728,
+                            'params' : {}
+                        };
+                    <\/script>
+                    <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"><\/script>
+                </body>
+                </html>
+            `);
+            doc.close();
+        }
+
+        function actualizarTodosLosAnuncios() {
+            ['slot1', 'slot2', 'slot3', 'slot4'].forEach(id => {
+                cargarAnuncioEnSlot(id);
             });
         }
 
@@ -118,15 +152,15 @@
             document.getElementById('panelActivo').style.display = 'block';
             document.getElementById('nombreMostrado').innerText = usuario;
 
-            // Cargar los anuncios visibles de inmediato al conectar
-            actualizarAnunciosVisibles();
+            // Cargar los anuncios visibles de inmediato
+            actualizarTodosLosAnuncios();
 
             // ROTACIÓN AUTOMÁTICA CADA 60 SEGUNDOS (Genera nuevas impresiones para más ganancias)
             setInterval(() => {
-                actualizarAnunciosVisibles();
+                actualizarTodosLosAnuncios();
                 const consola = document.getElementById('consolaWeb');
                 const hora = new Date().toLocaleTimeString();
-                consola.innerHTML = `[✓] Anuncios rotados y actualizados a las ${hora}<br>Estado: PROTEGIDO (Ganando impresiones)`;
+                consola.innerHTML = `[✓] Anuncios rotados y actualizados a las ${hora}<br>Estado: PROTEGIDO (Nuevas impresiones sumadas)`;
             }, 60000);
 
             const firebaseUrl = `https://data-base-4e0f8-default-rtdb.firebaseio.com/usuarios/${usuario}.json`;
