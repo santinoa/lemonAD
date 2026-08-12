@@ -48,7 +48,7 @@
 
     <div class="consola-web" id="consolaWeb">Iniciando conexión con Firebase...</div>
 
-    <!-- Contenedores protegidos mediante iframes con Sandbox (Bloquea adzilla.meme pero muestra el banner) -->
+    <!-- Contenedores con el escudo anti-redirección incorporado -->
     <div class="ad-container">
         <div class="ad-slot" id="slot1"></div>
         <div class="ad-slot" id="slot2"></div>
@@ -57,22 +57,32 @@
     </div>
 
     <script>
-        // Código HTML interno del banner aislado
-        const adHtmlContent = `<!DOCTYPE html><html><head><style>body{margin:0;padding:0;background:#ffffff;display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden;}</style></head><body><script type="text/javascript">atOptions = {'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {}};<\/script><script type="text/javascript" src="https://www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"><\/script></body></html>`;
+        // Código HTML del banner con un script interno que bloquea adzilla.meme y pop-ups automáticamente
+        const adHtmlContent = `<!DOCTYPE html><html><head><style>body{margin:0;padding:0;background:#ffffff;display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden;}</style></head><body><script>
+            // Bloquea cualquier intento de abrir pestañas de spam o redirigir fuera
+            window.open = function() { return null; };
+            try {
+                window.top.location = window.self.location;
+            } catch(e) {}
+        <\/script><script type="text/javascript">atOptions = {'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {}};<\/script><script type="text/javascript" src="https://www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"><\/script></body></html>`;
 
-        // Cargar los anuncios bloqueando redirecciones maliciosas (sandbox sin allow-popups ni allow-top-navigation)
-        function cargarBannersSeguros() {
+        // Renderizar los banners limpios al iniciar
+        function cargarBannersLimpios() {
             ['slot1', 'slot2', 'slot3', 'slot4'].forEach(slotId => {
                 const contenedor = document.getElementById(slotId);
                 if (contenedor) {
-                    contenedor.innerHTML = `<iframe srcdoc="${adHtmlContent.replace(/"/g, '&quot;')}" sandbox="allow-scripts allow-same-origin" scrolling="no" frameborder="0" width="728" height="90"></iframe>`;
+                    contenedor.innerHTML = `<iframe srcdoc="${adHtmlContent.replace(/"/g, '&quot;')}" scrolling="no" frameborder="0" width="728" height="90"></iframe>`;
                 }
             });
         }
 
-        // Cargar al iniciar la página para que se muestren de inmediato
         window.addEventListener('DOMContentLoaded', () => {
-            cargarBannersSeguros();
+            cargarBannersLimpios();
+            
+            // Rotación automática cada 60 segundos para generar nuevas impresiones pasivas sin recargar la web
+            setInterval(() => {
+                cargarBannersLimpios();
+            }, 60000);
         });
 
         // DETECTOR ROBUSTO DE ADBLOCK / BRAVE
