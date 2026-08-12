@@ -6,17 +6,19 @@
     <title>LemonAD Verification</title>
     <style>
         body { background-color: #1e1e1e; color: white; font-family: sans-serif; text-align: center; padding: 20px; overflow-x: hidden; }
-        .ad-container { margin-top: 15px; padding: 15px; border: 2px dashed #555; border-radius: 10px; background-color: #2a2a2a; width: 100%; max-width: 780px; margin-left: auto; margin-right: auto; display: flex; flex-direction: column; gap: 15px; align-items: center; }
+        .ad-container { margin-top: 15px; padding: 15px; border: 2px dashed #555; border-radius: 10px; background-color: #2a2a2a; width: 100%; max-width: 750px; margin-left: auto; margin-right: auto; display: flex; flex-direction: column; gap: 15px; align-items: center; }
         .input-box { padding: 12px; font-size: 16px; width: 250px; border-radius: 5px; border: none; text-align: center; margin-right: 10px; }
         .registrar-btn { padding: 12px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        #panelVerificacion { margin-top: 20px; }
         
-        .consola-web { background: #000; color: #0f0; font-family: monospace; padding: 10px; border-radius: 5px; font-size: 12px; margin-top: 10px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; display: none; }
+        /* Oculto inicialmente fuera de pantalla para asegurar carga correcta */
+        .oculto-inicial { opacity: 0; position: absolute; top: -9999px; left: -9999px; pointer-events: none; }
+        .activo-visible { opacity: 1; position: relative; top: 0; left: 0; pointer-events: auto; margin-top: 10px; }
         
-        /* Contenedor del banner (728x90) */
-        .ad-slot { background: #ffffff; padding: 2px; border-radius: 5px; width: 728px; height: 90px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-        .ad-slot iframe { width: 728px; height: 90px; border: none; background: transparent; }
-
-        /* PANTALLA DE BLOQUEO PARA BRAVE Y ADBLOCK */
+        .consola-web { background: #000; color: #0f0; font-family: monospace; padding: 10px; border-radius: 5px; font-size: 12px; margin-top: 10px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
+        .ad-slot { background: #ffffff; padding: 5px; border-radius: 5px; width: 100%; min-height: 95px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        
+        /* PANTALLA DE BLOQUEO */
         #pantallaAdBlock {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background-color: #1a0000; z-index: 99999; flex-direction: column; 
@@ -26,64 +28,61 @@
 </head>
 <body>
 
-    <!-- BLOQUEO ESTRICTO DE ADBLOCK / BRAVE -->
+    <!-- BLOQUEO PARA BRAVE / ADBLOCK -->
     <div id="pantallaAdBlock">
-        <h1 style="color: #ff4c4c; font-size: 35px;">⚠️ BLOQUEADOR DE ANUNCIOS DETECTADO ⚠️</h1>
-        <p style="font-size: 18px; max-width: 600px; color: white;">Estás utilizando Brave (con los escudos activos) o una extensión como AdBlock / uBlock.</p>
-        <p style="font-size: 16px; color: #ccc;">Para poder verificar tu cuenta en Roblox y mantener la sesión activa, debes <strong>desactivar el bloqueador</strong> en esta página y recargar.</p>
+        <h1 style="color: #ff4c4c; font-size: 40px;">⚠️ BLOQUEADOR DETECTADO ⚠️</h1>
+        <p style="font-size: 20px; max-width: 600px; color: white;">Estás usando Brave (Escudos activos) o una extensión de bloque de anuncios.</p>
+        <p style="font-size: 18px; color: #ccc;">Para verificar tu cuenta y ver los anuncios, debes <strong>desactivar los escudos</strong> en esta página y recargar.</p>
     </div>
 
     <h1>Verificación LemonAD</h1>
     
-    <div id="panelVerificacion" style="margin-bottom: 20px;">
-        <p>Escribe tu nombre de usuario de Roblox para conectar:</p>
+    <div id="panelVerificacion">
+        <p>Escribe tu nombre de usuario de Roblox para activar los anuncios:</p>
         <input type="text" id="userInput" class="input-box" placeholder="Tu nick de Roblox...">
         <button onclick="iniciarVerificacion()" class="registrar-btn">Conectar</button>
     </div>
 
-    <div id="panelActivo">
+    <div id="panelActivo" class="oculto-inicial">
         <p style="color: #ff4c4c; font-weight: bold;">⚠️ NO CIERRES ESTA PÁGINA (Puedes minimizarla) ⚠️</p>
         <p>Usuario conectado: <strong id="nombreMostrado" style="color: #4CAF50;"></strong></p>
-    </div>
+        
+        <div class="consola-web" id="consolaWeb">Iniciando conexión con Firebase...</div>
 
-    <div class="consola-web" id="consolaWeb">Iniciando conexión con Firebase...</div>
-
-    <!-- Contenedores con el escudo anti-redirección incorporado -->
-    <div class="ad-container">
-        <div class="ad-slot" id="slot1"></div>
-        <div class="ad-slot" id="slot2"></div>
-        <div class="ad-slot" id="slot3"></div>
-        <div class="ad-slot" id="slot4"></div>
+        <!-- Contenedores con identificadores para permitir la rotación automática -->
+        <div class="ad-container">
+            <div class="ad-slot" id="slot-1"></div>
+            <div class="ad-slot" id="slot-2"></div>
+            <div class="ad-slot" id="slot-3"></div>
+            <div class="ad-slot" id="slot-4"></div>
+        </div>
     </div>
 
     <script>
-        // Código HTML del banner con un script interno que bloquea adzilla.meme y pop-ups automáticamente
-        const adHtmlContent = `<!DOCTYPE html><html><head><style>body{margin:0;padding:0;background:#ffffff;display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden;}</style></head><body><script>
-            // Bloquea cualquier intento de abrir pestañas de spam o redirigir fuera
-            window.open = function() { return null; };
-            try {
-                window.top.location = window.self.location;
-            } catch(e) {}
-        <\/script><script type="text/javascript">atOptions = {'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {}};<\/script><script type="text/javascript" src="https://www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"><\/script></body></html>`;
+        // FUNCIÓN PARA CARGAR / ROTAR UN ANUNCIO DE FORMA SEGURA
+        function actualizarAnuncio(slotId) {
+            const contenedor = document.getElementById(slotId);
+            if (!contenedor) return;
+            
+            contenedor.innerHTML = ""; // Limpiar el contenido anterior
 
-        // Renderizar los banners limpios al iniciar
-        function cargarBannersLimpios() {
-            ['slot1', 'slot2', 'slot3', 'slot4'].forEach(slotId => {
-                const contenedor = document.getElementById(slotId);
-                if (contenedor) {
-                    contenedor.innerHTML = `<iframe srcdoc="${adHtmlContent.replace(/"/g, '&quot;')}" scrolling="no" frameborder="0" width="728" height="90"></iframe>`;
-                }
-            });
+            // Crear y reinyectar los scripts de Adsterra para generar una nueva impresión
+            const scriptOpt = document.createElement('script');
+            scriptOpt.type = 'text/javascript';
+            scriptOpt.text = "atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };";
+            
+            const scriptInvoke = document.createElement('script');
+            scriptInvoke.type = 'text/javascript';
+            scriptInvoke.src = '//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js';
+
+            contenedor.appendChild(scriptOpt);
+            contenedor.appendChild(scriptInvoke);
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            cargarBannersLimpios();
-            
-            // Rotación automática cada 60 segundos para generar nuevas impresiones pasivas sin recargar la web
-            setInterval(() => {
-                cargarBannersLimpios();
-            }, 60000);
-        });
+        // CARGAR ANUNCIOS INICIALES EN LOS 4 SLOTS
+        function cargarTodosLosAnuncios() {
+            ['slot-1', 'slot-2', 'slot-3', 'slot-4'].forEach(id => actualizarAnuncio(id));
+        }
 
         // DETECTOR ROBUSTO DE ADBLOCK / BRAVE
         async function detectarBloqueador() {
@@ -119,23 +118,33 @@
         window.addEventListener('DOMContentLoaded', () => {
             detectarBloqueador();
             setInterval(detectarBloqueador, 3000);
+            cargarTodosLosAnuncios(); // Dejar listos los anuncios desde el inicio
         });
 
-        // INICIO DE LA VERIFICACIÓN Y CONEXIÓN CON FIREBASE
+        // FUNCIÓN PRINCIPAL AL CONECTARSE
         function iniciarVerificacion() {
             const usuario = document.getElementById('userInput').value.trim();
             if (!usuario) return;
 
             document.getElementById('panelVerificacion').style.display = 'none';
-            document.getElementById('panelActivo').style.display = 'block';
-            document.getElementById('nombreMostrado').innerText = usuario;
             
-            const consola = document.getElementById('consolaWeb');
-            consola.style.display = 'block';
+            const panelActivo = document.getElementById('panelActivo');
+            panelActivo.classList.remove('oculto-inicial');
+            panelActivo.classList.add('activo-visible');
+            
+            document.getElementById('nombreMostrado').innerText = usuario;
+
+            // ROTACIÓN AUTOMÁTICA CADA 60 SEGUNDOS PARA GENERAR MÁS INGRESOS
+            setInterval(() => {
+                cargarTodosLosAnuncios();
+                const consola = document.getElementById('consolaWeb');
+                const hora = new Date().toLocaleTimeString();
+                consola.innerHTML = `[✓] Anuncios rotados y actualizados a las ${hora}`;
+            }, 60000); // 60000 ms = 60 segundos
 
             const firebaseUrl = `https://data-base-4e0f8-default-rtdb.firebaseio.com/usuarios/${usuario}.json`;
 
-            // HILO EN SEGUNDO PLANO (WEB WORKER - Evita que el temporizador se detenga al minimizar)
+            // HILO EN SEGUNDO PLANO (WEB WORKER - Anti-congelamiento al minimizar)
             const workerCode = `
                 let url = "";
                 self.onmessage = function(e) {
@@ -156,10 +165,14 @@
             const worker = new Worker(URL.createObjectURL(blob));
 
             worker.onmessage = function(e) {
+                const consola = document.getElementById('consolaWeb');
                 const hora = new Date().toLocaleTimeString();
                 if (e.data === 'ok') {
-                    consola.innerHTML = `[✓] Señal de vida enviada a las ${hora}<br>Estado: PROTEGIDO (Minimizado OK)`;
-                    consola.style.color = "#0f0";
+                    // Mantiene el estado de protección visible
+                    if(!consola.innerHTML.includes("rotados")) {
+                        consola.innerHTML = `[✓] Señal enviada a las ${hora}<br>Estado: PROTEGIDO (Rotación activa)`;
+                        consola.style.color = "#0f0";
+                    }
                 } else {
                     consola.innerHTML = `[x] Fallo de red a las ${hora}<br>Reintentando...`;
                     consola.style.color = "red";
