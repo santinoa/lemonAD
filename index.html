@@ -14,12 +14,13 @@
             border-radius: 10px; 
             background-color: #2a2a2a; 
             width: 100%; 
-            max-width: 600px; 
+            max-width: 750px; 
             margin-left: auto; 
             margin-right: auto;
             display: flex;
             flex-direction: column;
             gap: 15px;
+            align-items: center;
         }
         .input-box { padding: 12px; font-size: 16px; width: 250px; border-radius: 5px; border: none; text-align: center; margin-right: 10px; }
         .registrar-btn { padding: 12px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
@@ -27,24 +28,15 @@
         #panelVerificacion { margin-top: 20px; }
         #panelActivo { display: none; margin-top: 10px; }
         
-        /* Estilo para los 4 banners interactivos de anuncios */
-        .ad-banner-link {
-            display: block;
+        .ad-slot {
+            background: #ffffff;
+            padding: 5px;
+            border-radius: 5px;
+            min-height: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             width: 100%;
-            padding: 20px;
-            background: linear-gradient(135deg, #ff4c4c, #ff7676);
-            color: white;
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 8px;
-            border: 2px solid white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            transition: 0.2s;
-        }
-        .ad-banner-link:hover {
-            transform: scale(1.02);
-            background: linear-gradient(135deg, #ff2a2a, #ff5252);
         }
     </style>
 </head>
@@ -58,52 +50,48 @@
         <button onclick="iniciarVerificacion()" class="registrar-btn">Conectar</button>
     </div>
 
-    <!-- PASO 2: Los 4 banners de anuncios y latido -->
+    <!-- PASO 2: Los 4 banners automáticos de Adsterra -->
     <div id="panelActivo">
         <p class="alerta">⚠️ NO CIERRES ESTA PÁGINA ⚠️</p>
         <p>Conectado como: <strong id="nombreMostrado" style="color: #4CAF50;"></strong></p>
-        <p style="font-size: 14px; color: #ccc;">Haz clic en los anuncios de abajo para apoyar el desarrollo:</p>
+        <p style="font-size: 14px; color: #ccc;">Los anuncios se muestran automáticamente. Déjalos abiertos.</p>
 
         <div class="ad-container">
-            <a href="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f" target="_blank" class="ad-banner-link">
-                📢 Publicidad 1: ¡Haz clic aquí para ver el patrocinador!
-            </a>
-            
-            <a href="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f" target="_blank" class="ad-banner-link">
-                📢 Publicidad 2: ¡Haz clic aquí para ver el patrocinador!
-            </a>
-            
-            <a href="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f" target="_blank" class="ad-banner-link">
-                📢 Publicidad 3: ¡Haz clic aquí para ver el patrocinador!
-            </a>
-            
-            <a href="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f" target="_blank" class="ad-banner-link">
-                📢 Publicidad 4: ¡Haz clic aquí para ver el patrocinador!
-            </a>
+            <!-- Banner Automático 1 -->
+            <div class="ad-slot">
+                <script type="text/javascript">
+                    atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
+            </div>
+
+            <!-- Banner Automático 2 -->
+            <div class="ad-slot">
+                <script type="text/javascript">
+                    atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
+            </div>
+
+            <!-- Banner Automático 3 -->
+            <div class="ad-slot">
+                <script type="text/javascript">
+                    atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
+            </div>
+
+            <!-- Banner Automático 4 -->
+            <div class="ad-slot">
+                <script type="text/javascript">
+                    atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
+            </div>
         </div>
     </div>
 
     <script>
-        // DETECTOR DE BLOQUEADOR DE ANUNCIOS (ADBLOCK)
-        window.addEventListener('DOMContentLoaded', (event) => {
-            let bait = document.createElement('div');
-            bait.setAttribute('id', 'ad-container-bait');
-            bait.setAttribute('class', 'adsbox pub_300x250 ad-banner ad-slot');
-            bait.style.width = '1px';
-            bait.style.height = '1px';
-            bait.style.position = 'absolute';
-            bait.style.left = '-10000px';
-            document.body.appendChild(bait);
-
-            setTimeout(function() {
-                if (bait.offsetParent === null || bait.offsetHeight === 0 || window.getComputedStyle(bait).display === 'none' || window.getComputedStyle(bait).visibility === 'hidden') {
-                    // Si detecta un bloqueador activo, redirige automáticamente a Google
-                    window.location.href = "https://www.google.com";
-                }
-                bait.remove();
-            }, 500);
-        });
-
         let firebaseUrl = "";
 
         function iniciarVerificacion() {
@@ -133,7 +121,6 @@
             setInterval(enviarLatido, 5000); 
         }
 
-        // Si cierra la pestaña, avisa instantáneamente a Firebase poniendo el latido en 0
         window.addEventListener('beforeunload', function () {
             if (firebaseUrl) {
                 navigator.sendBeacon(firebaseUrl, JSON.stringify({ ultimo_latido: 0 }));
