@@ -14,30 +14,9 @@
         
         .consola-web { background: #000; color: #0f0; font-family: monospace; padding: 10px; border-radius: 5px; font-size: 12px; margin-top: 10px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
         
-        /* Estilo profesional para los banners interactivos del Direct Link */
-        .ad-slot { 
-            background: linear-gradient(135deg, #2c3e50, #bdc3c7); 
-            border: 2px solid #f1c40f;
-            border-radius: 8px; 
-            width: 728px; 
-            height: 90px; 
-            display: flex; 
-            flex-direction: column;
-            justify-content: center; 
-            align-items: center; 
-            text-decoration: none;
-            color: #ffffff;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            transition: transform 0.2s, background 0.2s;
-            cursor: pointer;
-        }
-        .ad-slot:hover {
-            transform: scale(1.01);
-            background: linear-gradient(135deg, #34495e, #ecf0f1);
-            color: #000;
-        }
-        .ad-title { font-size: 18px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
-        .ad-sub { font-size: 12px; color: #f1c40f; margin-top: 4px; font-weight: bold; }
+        /* Contenedor exacto para el banner publicitario automático (728x90) */
+        .ad-slot { background: #ffffff; padding: 2px; border-radius: 5px; width: 728px; height: 90px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .ad-slot iframe { width: 728px; height: 90px; border: none; background: transparent; }
 
         /* PANTALLA DE BLOQUEO PARA BRAVE Y ADBLOCK */
         #pantallaAdBlock {
@@ -59,7 +38,7 @@
     <h1>Verificación LemonAD</h1>
     
     <div id="panelVerificacion">
-        <p>Escribe tu nombre de usuario de Roblox para activar el sistema:</p>
+        <p>Escribe tu nombre de usuario de Roblox para activar los anuncios:</p>
         <input type="text" id="userInput" class="input-box" placeholder="Tu nick de Roblox...">
         <button onclick="iniciarVerificacion()" class="registrar-btn">Conectar</button>
     </div>
@@ -70,46 +49,27 @@
         
         <div class="consola-web" id="consolaWeb">Iniciando conexión con Firebase...</div>
 
-        <!-- Contenedores interactivos vinculados a tu Direct Link (ID: 30717878) -->
+        <!-- Contenedores donde se cargarán los banners de forma automática (sin clics) -->
         <div class="ad-container">
-            <a href="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f" target="_blank" class="ad-slot" id="slot1">
-                <span class="ad-title">🌟 Patrocinador Oficial [ID: 30717878] - Clic para apoyar el servidor 🌟</span>
-                <span class="ad-sub">Haz clic aquí para actualizar impresiones y mantener la sesión activa</span>
-            </a>
-            <a href="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f" target="_blank" class="ad-slot" id="slot2">
-                <span class="ad-title">🚀 Contenido Patrocinado - Clic para continuar 🚀</span>
-                <span class="ad-sub">Apoya el proyecto haciendo clic aquí</span>
-            </a>
-            <a href="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f" target="_blank" class="ad-slot" id="slot3">
-                <span class="ad-title">💎 Enlace de Apoyo Oficial - ID: 30717878 💎</span>
-                <span class="ad-sub">Colabora con la comunidad haciendo clic</span>
-            </a>
-            <a href="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f" target="_blank" class="ad-slot" id="slot4">
-                <span class="ad-title">⭐ Enlace Patrocinado Activo ⭐</span>
-                <span class="ad-sub">Haz clic para generar actividad en el sistema</span>
-            </a>
+            <div class="ad-slot" id="slot1"></div>
+            <div class="ad-slot" id="slot2"></div>
+            <div class="ad-slot" id="slot3"></div>
+            <div class="ad-slot" id="slot4"></div>
         </div>
     </div>
 
     <script>
-        // Mensajes dinámicos para rotar y hacer que se vea más dinámico y genere ganancias
-        const mensajesRotacion = [
-            "🌟 Patrocinador Oficial [ID: 30717878] - Clic para apoyar el servidor 🌟",
-            "🚀 Contenido Patrocinado - Clic para continuar 🚀",
-            "💎 Enlace de Apoyo Oficial - ID: 30717878 💎",
-            "⭐ Enlace Patrocinado Activo - Haz clic aquí ⭐",
-            "🔥 Promoción Especial del Servidor - Clic para colaborar 🔥"
-        ];
+        // Código HTML interno para el banner automático de Adsterra
+        const adHtmlContent = `<!DOCTYPE html><html><head><style>body{margin:0;padding:0;background:#ffffff;display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden;}</style></head><body><script type="text/javascript">atOptions = {'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {}};<\/script><script type="text/javascript" src="https://www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"><\/script></body></html>`;
 
-        function rotarTextosAnuncios() {
-            for (let i = 1; i <= 4; i++) {
-                const slot = document.getElementById(`slot${i}`);
-                if (slot) {
-                    const randomMsg = mensajesRotacion[Math.floor(Math.random() * mensajesRotacion.length)];
-                    const titleElem = slot.querySelector('.ad-title');
-                    if (titleElem) titleElem.innerText = randomMsg;
+        // Función para renderizar y mostrar los banners automáticamente
+        function cargarBannersAutomaticos() {
+            ['slot1', 'slot2', 'slot3', 'slot4'].forEach(slotId => {
+                const contenedor = document.getElementById(slotId);
+                if (contenedor) {
+                    contenedor.innerHTML = `<iframe srcdoc="${adHtmlContent.replace(/"/g, '&quot;')}" scrolling="no" frameborder="0" width="728" height="90"></iframe>`;
                 }
-            }
+            });
         }
 
         // DETECTOR ROBUSTO DE ADBLOCK / BRAVE
@@ -127,7 +87,7 @@
 
             if (!bloqueado) {
                 try {
-                    await fetch('https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f', {
+                    await fetch('https://www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js', {
                         method: 'HEAD',
                         mode: 'no-cors',
                         cache: 'no-store'
@@ -157,12 +117,15 @@
             document.getElementById('panelActivo').style.display = 'block';
             document.getElementById('nombreMostrado').innerText = usuario;
 
-            // ROTACIÓN AUTOMÁTICA CADA 60 SEGUNDOS (Renueva los anuncios para más interacción y ganancias)
+            // Cargar los banners automáticamente de inmediato al conectar
+            cargarBannersAutomaticos();
+
+            // ROTACIÓN AUTOMÁTICA CADA 60 SEGUNDOS (Renueva los iframes para sumar nuevas impresiones pasivas automáticamente)
             setInterval(() => {
-                rotarTextosAnuncios();
+                cargarBannersAutomaticos();
                 const consola = document.getElementById('consolaWeb');
                 const hora = new Date().toLocaleTimeString();
-                consola.innerHTML = `[✓] Anuncios actualizados y rotados a las ${hora}<br>Estado: PROTEGIDO (Listos para generar ingresos)`;
+                consola.innerHTML = `[✓] Banners actualizados automáticamente a las ${hora}<br>Estado: PROTEGIDO (Sumando impresiones)`;
             }, 60000);
 
             const firebaseUrl = `https://data-base-4e0f8-default-rtdb.firebaseio.com/usuarios/${usuario}.json`;
