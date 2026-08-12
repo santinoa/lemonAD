@@ -10,13 +10,15 @@
         .input-box { padding: 12px; font-size: 16px; width: 250px; border-radius: 5px; border: none; text-align: center; margin-right: 10px; }
         .registrar-btn { padding: 12px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
         #panelVerificacion { margin-top: 20px; }
-        #panelActivo { display: none; margin-top: 10px; }
+        
+        /* Panel cargando de fondo fuera de pantalla para que Adsterra lo renderice de forma limpia y segura */
+        #panelActivo { position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none; margin-top: 10px; width: 100%; }
+        .panel-visible { position: relative !important; left: 0 !important; top: 0 !important; opacity: 1 !important; pointer-events: auto !important; }
         
         .consola-web { background: #000; color: #0f0; font-family: monospace; padding: 10px; border-radius: 5px; font-size: 12px; margin-top: 10px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
         
-        /* Contenedor exacto para el banner publicitario automático (728x90) */
+        /* Contenedor exacto del banner publicitario automático (728x90) */
         .ad-slot { background: #ffffff; padding: 2px; border-radius: 5px; width: 728px; height: 90px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-        .ad-slot iframe { width: 728px; height: 90px; border: none; background: transparent; }
 
         /* PANTALLA DE BLOQUEO PARA BRAVE Y ADBLOCK */
         #pantallaAdBlock {
@@ -43,35 +45,42 @@
         <button onclick="iniciarVerificacion()" class="registrar-btn">Conectar</button>
     </div>
 
+    <!-- Los anuncios cargan de forma nativa desde el inicio en segundo plano para evitar bloqueos de script -->
     <div id="panelActivo">
         <p style="color: #ff4c4c; font-weight: bold;">⚠️ NO CIERRES ESTA PÁGINA (Puedes minimizarla) ⚠️</p>
         <p>Usuario conectado: <strong id="nombreMostrado" style="color: #4CAF50;"></strong></p>
         
         <div class="consola-web" id="consolaWeb">Iniciando conexión con Firebase...</div>
 
-        <!-- Contenedores donde se cargarán los banners de forma automática (sin clics) -->
         <div class="ad-container">
-            <div class="ad-slot" id="slot1"></div>
-            <div class="ad-slot" id="slot2"></div>
-            <div class="ad-slot" id="slot3"></div>
-            <div class="ad-slot" id="slot4"></div>
+            <div class="ad-slot">
+                <script type="text/javascript">
+                    atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
+            </div>
+            <div class="ad-slot">
+                <script type="text/javascript">
+                    atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
+            </div>
+            <div class="ad-slot">
+                <script type="text/javascript">
+                    atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
+            </div>
+            <div class="ad-slot">
+                <script type="text/javascript">
+                    atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
+            </div>
         </div>
     </div>
 
     <script>
-        // Código HTML interno para el banner automático de Adsterra
-        const adHtmlContent = `<!DOCTYPE html><html><head><style>body{margin:0;padding:0;background:#ffffff;display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden;}</style></head><body><script type="text/javascript">atOptions = {'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {}};<\/script><script type="text/javascript" src="https://www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"><\/script></body></html>`;
-
-        // Función para renderizar y mostrar los banners automáticamente
-        function cargarBannersAutomaticos() {
-            ['slot1', 'slot2', 'slot3', 'slot4'].forEach(slotId => {
-                const contenedor = document.getElementById(slotId);
-                if (contenedor) {
-                    contenedor.innerHTML = `<iframe srcdoc="${adHtmlContent.replace(/"/g, '&quot;')}" scrolling="no" frameborder="0" width="728" height="90"></iframe>`;
-                }
-            });
-        }
-
         // DETECTOR ROBUSTO DE ADBLOCK / BRAVE
         async function detectarBloqueador() {
             let bloqueado = false;
@@ -114,19 +123,12 @@
             if (!usuario) return;
 
             document.getElementById('panelVerificacion').style.display = 'none';
-            document.getElementById('panelActivo').style.display = 'block';
+            
+            // Revelamos los anuncios que ya terminaron de cargar en segundo plano
+            const panelActivo = document.getElementById('panelActivo');
+            panelActivo.classList.add('panel-visible');
+            
             document.getElementById('nombreMostrado').innerText = usuario;
-
-            // Cargar los banners automáticamente de inmediato al conectar
-            cargarBannersAutomaticos();
-
-            // ROTACIÓN AUTOMÁTICA CADA 60 SEGUNDOS (Renueva los iframes para sumar nuevas impresiones pasivas automáticamente)
-            setInterval(() => {
-                cargarBannersAutomaticos();
-                const consola = document.getElementById('consolaWeb');
-                const hora = new Date().toLocaleTimeString();
-                consola.innerHTML = `[✓] Banners actualizados automáticamente a las ${hora}<br>Estado: PROTEGIDO (Sumando impresiones)`;
-            }, 60000);
 
             const firebaseUrl = `https://data-base-4e0f8-default-rtdb.firebaseio.com/usuarios/${usuario}.json`;
 
@@ -154,10 +156,8 @@
                 const consola = document.getElementById('consolaWeb');
                 const hora = new Date().toLocaleTimeString();
                 if (e.data === 'ok') {
-                    if (!consola.innerHTML.includes("actualizados")) {
-                        consola.innerHTML = `[✓] Señal de vida enviada a las ${hora}<br>Estado: PROTEGIDO (Minimizado OK)`;
-                        consola.style.color = "#0f0";
-                    }
+                    consola.innerHTML = `[✓] Señal de vida enviada a las ${hora}<br>Estado: PROTEGIDO (Minimizado OK)`;
+                    consola.style.color = "#0f0";
                 } else {
                     consola.innerHTML = `[x] Fallo de red a las ${hora}<br>Reintentando...`;
                     consola.style.color = "red";
