@@ -12,8 +12,9 @@
         
         .consola-web { background: #000; color: #0f0; font-family: monospace; padding: 10px; border-radius: 5px; font-size: 12px; margin-top: 10px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; display: none; }
         
-        /* Contenedor exacto del banner publicitario (728x90) visible desde el inicio para que Adsterra cargue bien */
+        /* Contenedor del banner (728x90) */
         .ad-slot { background: #ffffff; padding: 2px; border-radius: 5px; width: 728px; height: 90px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .ad-slot iframe { width: 728px; height: 90px; border: none; background: transparent; }
 
         /* PANTALLA DE BLOQUEO PARA BRAVE Y ADBLOCK */
         #pantallaAdBlock {
@@ -47,35 +48,33 @@
 
     <div class="consola-web" id="consolaWeb">Iniciando conexión con Firebase...</div>
 
-    <!-- Los anuncios están visibles desde el primer milisegundo para que Adsterra los renderice sin bloqueos -->
+    <!-- Contenedores protegidos mediante iframes con Sandbox (Bloquea adzilla.meme pero muestra el banner) -->
     <div class="ad-container">
-        <div class="ad-slot">
-            <script type="text/javascript">
-                atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-            </script>
-            <script type="text/javascript" src="https://www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
-        </div>
-        <div class="ad-slot">
-            <script type="text/javascript">
-                atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-            </script>
-            <script type="text/javascript" src="https://www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
-        </div>
-        <div class="ad-slot">
-            <script type="text/javascript">
-                atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-            </script>
-            <script type="text/javascript" src="https://www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
-        </div>
-        <div class="ad-slot">
-            <script type="text/javascript">
-                atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-            </script>
-            <script type="text/javascript" src="https://www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
-        </div>
+        <div class="ad-slot" id="slot1"></div>
+        <div class="ad-slot" id="slot2"></div>
+        <div class="ad-slot" id="slot3"></div>
+        <div class="ad-slot" id="slot4"></div>
     </div>
 
     <script>
+        // Código HTML interno del banner aislado
+        const adHtmlContent = `<!DOCTYPE html><html><head><style>body{margin:0;padding:0;background:#ffffff;display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden;}</style></head><body><script type="text/javascript">atOptions = {'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {}};<\/script><script type="text/javascript" src="https://www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"><\/script></body></html>`;
+
+        // Cargar los anuncios bloqueando redirecciones maliciosas (sandbox sin allow-popups ni allow-top-navigation)
+        function cargarBannersSeguros() {
+            ['slot1', 'slot2', 'slot3', 'slot4'].forEach(slotId => {
+                const contenedor = document.getElementById(slotId);
+                if (contenedor) {
+                    contenedor.innerHTML = `<iframe srcdoc="${adHtmlContent.replace(/"/g, '&quot;')}" sandbox="allow-scripts allow-same-origin" scrolling="no" frameborder="0" width="728" height="90"></iframe>`;
+                }
+            });
+        }
+
+        // Cargar al iniciar la página para que se muestren de inmediato
+        window.addEventListener('DOMContentLoaded', () => {
+            cargarBannersSeguros();
+        });
+
         // DETECTOR ROBUSTO DE ADBLOCK / BRAVE
         async function detectarBloqueador() {
             let bloqueado = false;
@@ -117,7 +116,6 @@
             const usuario = document.getElementById('userInput').value.trim();
             if (!usuario) return;
 
-            // Ocultamos solo la caja de texto para dejar los anuncios y la sesión limpios en pantalla
             document.getElementById('panelVerificacion').style.display = 'none';
             document.getElementById('panelActivo').style.display = 'block';
             document.getElementById('nombreMostrado').innerText = usuario;
