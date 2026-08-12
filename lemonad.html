@@ -14,7 +14,7 @@
             border-radius: 10px; 
             background-color: #2a2a2a; 
             width: 100%; 
-            max-width: 728px; 
+            max-width: 600px; 
             margin-left: auto; 
             margin-right: auto;
             display: flex;
@@ -27,13 +27,24 @@
         #panelVerificacion { margin-top: 20px; }
         #panelActivo { display: none; margin-top: 10px; }
         
-        /* Estilo para los 4 banners apilados */
-        .ad-banner { 
-            width: 100%; 
-            height: 120px; 
-            border: none; 
-            border-radius: 5px; 
-            background: white; 
+        /* Estilo para los 4 banners interactivos de anuncios */
+        .ad-banner-link {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff4c4c, #ff7676);
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            border: 2px solid white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: 0.2s;
+        }
+        .ad-banner-link:hover {
+            transform: scale(1.02);
+            background: linear-gradient(135deg, #ff2a2a, #ff5252);
         }
     </style>
 </head>
@@ -47,28 +58,52 @@
         <button onclick="iniciarVerificacion()" class="registrar-btn">Conectar</button>
     </div>
 
-    <!-- PASO 2: Los 4 banners rotativos y latido -->
+    <!-- PASO 2: Los 4 banners de anuncios y latido -->
     <div id="panelActivo">
         <p class="alerta">⚠️ NO CIERRES ESTA PÁGINA ⚠️</p>
         <p>Conectado como: <strong id="nombreMostrado" style="color: #4CAF50;"></strong></p>
-        <p style="font-size: 14px; color: #ccc;">Los anuncios se actualizan automáticamente cada cierto tiempo.</p>
+        <p style="font-size: 14px; color: #ccc;">Haz clic en los anuncios de abajo para apoyar el desarrollo:</p>
 
         <div class="ad-container">
-            <p style="color: #aaa; margin: 0; font-size: 13px;">Publicidad Patrocinada (1/4):</p>
-            <iframe id="ad1" class="ad-banner" src="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f"></iframe>
+            <a href="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f" target="_blank" class="ad-banner-link">
+                📢 Publicidad 1: ¡Haz clic aquí para ver el patrocinador!
+            </a>
             
-            <p style="color: #aaa; margin: 0; font-size: 13px;">Publicidad Patrocinada (2/4):</p>
-            <iframe id="ad2" class="ad-banner" src="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f"></iframe>
+            <a href="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f" target="_blank" class="ad-banner-link">
+                📢 Publicidad 2: ¡Haz clic aquí para ver el patrocinador!
+            </a>
             
-            <p style="color: #aaa; margin: 0; font-size: 13px;">Publicidad Patrocinada (3/4):</p>
-            <iframe id="ad3" class="ad-banner" src="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f"></iframe>
+            <a href="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f" target="_blank" class="ad-banner-link">
+                📢 Publicidad 3: ¡Haz clic aquí para ver el patrocinador!
+            </a>
             
-            <p style="color: #aaa; margin: 0; font-size: 13px;">Publicidad Patrocinada (4/4):</p>
-            <iframe id="ad4" class="ad-banner" src="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f"></iframe>
+            <a href="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f" target="_blank" class="ad-banner-link">
+                📢 Publicidad 4: ¡Haz clic aquí para ver el patrocinador!
+            </a>
         </div>
     </div>
 
     <script>
+        // DETECTOR DE BLOQUEADOR DE ANUNCIOS (ADBLOCK)
+        window.addEventListener('DOMContentLoaded', (event) => {
+            let bait = document.createElement('div');
+            bait.setAttribute('id', 'ad-container-bait');
+            bait.setAttribute('class', 'adsbox pub_300x250 ad-banner ad-slot');
+            bait.style.width = '1px';
+            bait.style.height = '1px';
+            bait.style.position = 'absolute';
+            bait.style.left = '-10000px';
+            document.body.appendChild(bait);
+
+            setTimeout(function() {
+                if (bait.offsetParent === null || bait.offsetHeight === 0 || window.getComputedStyle(bait).display === 'none' || window.getComputedStyle(bait).visibility === 'hidden') {
+                    // Si detecta un bloqueador activo, redirige automáticamente a Google
+                    window.location.href = "https://www.google.com";
+                }
+                bait.remove();
+            }, 500);
+        });
+
         let firebaseUrl = "";
 
         function iniciarVerificacion() {
@@ -96,14 +131,6 @@
 
             enviarLatido();
             setInterval(enviarLatido, 5000); 
-
-            // ROTACIÓN DE ANUNCIOS: Cada 25 segundos se recargan los 4 iframes para cambiar de anuncio automáticamente
-            setInterval(() => {
-                document.getElementById('ad1').src = document.getElementById('ad1').src;
-                document.getElementById('ad2').src = document.getElementById('ad2').src;
-                document.getElementById('ad3').src = document.getElementById('ad3').src;
-                document.getElementById('ad4').src = document.getElementById('ad4').src;
-            }, 25000);
         }
 
         // Si cierra la pestaña, avisa instantáneamente a Firebase poniendo el latido en 0
