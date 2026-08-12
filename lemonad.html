@@ -5,18 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LemonAD Verification</title>
     <style>
-        body { background-color: #1e1e1e; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+        body { background-color: #1e1e1e; color: white; font-family: sans-serif; text-align: center; padding: 20px; overflow-x: hidden; }
         .ad-container { margin-top: 15px; padding: 15px; border: 2px dashed #555; border-radius: 10px; background-color: #2a2a2a; width: 100%; max-width: 750px; margin-left: auto; margin-right: auto; display: flex; flex-direction: column; gap: 15px; align-items: center; }
         .input-box { padding: 12px; font-size: 16px; width: 250px; border-radius: 5px; border: none; text-align: center; margin-right: 10px; }
         .registrar-btn { padding: 12px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
         #panelVerificacion { margin-top: 20px; }
-        #panelActivo { display: none; margin-top: 10px; }
+        
+        /* Oculto inicialmente fuera de pantalla para asegurar carga correcta */
+        .oculto-inicial { opacity: 0; position: absolute; top: -9999px; left: -9999px; pointer-events: none; }
+        .activo-visible { opacity: 1; position: relative; top: 0; left: 0; pointer-events: auto; margin-top: 10px; }
+        
         .consola-web { background: #000; color: #0f0; font-family: monospace; padding: 10px; border-radius: 5px; font-size: 12px; margin-top: 10px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
-        .ad-slot { background: #ffffff; padding: 5px; border-radius: 5px; width: 100%; height: 95px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-        .ad-slot iframe { width: 728px; height: 90px; border: none; background: transparent; }
+        .ad-slot { background: #ffffff; padding: 5px; border-radius: 5px; width: 100%; min-height: 95px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        
+        /* PANTALLA DE BLOQUEO */
+        #pantallaAdBlock {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background-color: #1a0000; z-index: 99999; flex-direction: column; 
+            justify-content: center; align-items: center; padding: 20px; text-align: center;
+        }
     </style>
 </head>
 <body>
+
+    <!-- BLOQUEO PARA BRAVE / ADBLOCK -->
+    <div id="pantallaAdBlock">
+        <h1 style="color: #ff4c4c; font-size: 40px;">⚠️ BLOQUEADOR DETECTADO ⚠️</h1>
+        <p style="font-size: 20px; max-width: 600px; color: white;">Estás usando Brave (Escudos activos) o una extensión de bloque de anuncios.</p>
+        <p style="font-size: 18px; color: #ccc;">Para verificar tu cuenta y ver los anuncios, debes <strong>desactivar los escudos</strong> en esta página y recargar.</p>
+    </div>
+
     <h1>Verificación LemonAD</h1>
     
     <div id="panelVerificacion">
@@ -25,51 +43,108 @@
         <button onclick="iniciarVerificacion()" class="registrar-btn">Conectar</button>
     </div>
 
-    <div id="panelActivo">
+    <div id="panelActivo" class="oculto-inicial">
         <p style="color: #ff4c4c; font-weight: bold;">⚠️ NO CIERRES ESTA PÁGINA (Puedes minimizarla) ⚠️</p>
         <p>Usuario conectado: <strong id="nombreMostrado" style="color: #4CAF50;"></strong></p>
         
-        <!-- Consola web para que el jugador vea que sí está funcionando -->
         <div class="consola-web" id="consolaWeb">Iniciando conexión con Firebase...</div>
 
+        <!-- Contenedores con identificadores para permitir la rotación automática -->
         <div class="ad-container">
-            <div class="ad-slot" id="slot1"></div>
-            <div class="ad-slot" id="slot2"></div>
-            <div class="ad-slot" id="slot3"></div>
-            <div class="ad-slot" id="slot4"></div>
+            <div class="ad-slot" id="slot-1"></div>
+            <div class="ad-slot" id="slot-2"></div>
+            <div class="ad-slot" id="slot-3"></div>
+            <div class="ad-slot" id="slot-4"></div>
         </div>
     </div>
 
     <script>
-        function cargarAnuncios() {
-            const slots = ['slot1', 'slot2', 'slot3', 'slot4'];
-            slots.forEach(slotId => {
-                const contenedor = document.getElementById(slotId);
-                contenedor.innerHTML = ""; 
-                const scriptOpt = document.createElement('script');
-                scriptOpt.type = 'text/javascript';
-                scriptOpt.text = "atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };";
-                const scriptInvoke = document.createElement('script');
-                scriptInvoke.type = 'text/javascript';
-                scriptInvoke.src = '//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js';
-                contenedor.appendChild(scriptOpt);
-                contenedor.appendChild(scriptInvoke);
-            });
+        // FUNCIÓN PARA CARGAR / ROTAR UN ANUNCIO DE FORMA SEGURA
+        function actualizarAnuncio(slotId) {
+            const contenedor = document.getElementById(slotId);
+            if (!contenedor) return;
+            
+            contenedor.innerHTML = ""; // Limpiar el contenido anterior
+
+            // Crear y reinyectar los scripts de Adsterra para generar una nueva impresión
+            const scriptOpt = document.createElement('script');
+            scriptOpt.type = 'text/javascript';
+            scriptOpt.text = "atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };";
+            
+            const scriptInvoke = document.createElement('script');
+            scriptInvoke.type = 'text/javascript';
+            scriptInvoke.src = '//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js';
+
+            contenedor.appendChild(scriptOpt);
+            contenedor.appendChild(scriptInvoke);
         }
 
+        // CARGAR ANUNCIOS INICIALES EN LOS 4 SLOTS
+        function cargarTodosLosAnuncios() {
+            ['slot-1', 'slot-2', 'slot-3', 'slot-4'].forEach(id => actualizarAnuncio(id));
+        }
+
+        // DETECTOR ROBUSTO DE ADBLOCK / BRAVE
+        async function detectarBloqueador() {
+            let bloqueado = false;
+            const cebo = document.createElement('div');
+            cebo.className = 'pub_300x250 adsbox ad-slot';
+            cebo.style.position = 'absolute'; cebo.style.top = '-9999px';
+            document.body.appendChild(cebo);
+            
+            if (cebo.offsetHeight === 0 || window.getComputedStyle(cebo).display === 'none') {
+                bloqueado = true;
+            }
+            cebo.remove();
+
+            if (!bloqueado) {
+                try {
+                    await fetch('https://www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js', {
+                        method: 'HEAD',
+                        mode: 'no-cors',
+                        cache: 'no-store'
+                    });
+                } catch (error) {
+                    bloqueado = true;
+                }
+            }
+
+            if (bloqueado) {
+                document.getElementById('pantallaAdBlock').style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            detectarBloqueador();
+            setInterval(detectarBloqueador, 3000);
+            cargarTodosLosAnuncios(); // Dejar listos los anuncios desde el inicio
+        });
+
+        // FUNCIÓN PRINCIPAL AL CONECTARSE
         function iniciarVerificacion() {
             const usuario = document.getElementById('userInput').value.trim();
             if (!usuario) return;
 
             document.getElementById('panelVerificacion').style.display = 'none';
-            document.getElementById('panelActivo').style.display = 'block';
+            
+            const panelActivo = document.getElementById('panelActivo');
+            panelActivo.classList.remove('oculto-inicial');
+            panelActivo.classList.add('activo-visible');
+            
             document.getElementById('nombreMostrado').innerText = usuario;
 
-            cargarAnuncios();
+            // ROTACIÓN AUTOMÁTICA CADA 60 SEGUNDOS PARA GENERAR MÁS INGRESOS
+            setInterval(() => {
+                cargarTodosLosAnuncios();
+                const consola = document.getElementById('consolaWeb');
+                const hora = new Date().toLocaleTimeString();
+                consola.innerHTML = `[✓] Anuncios rotados y actualizados a las ${hora}`;
+            }, 60000); // 60000 ms = 60 segundos
 
             const firebaseUrl = `https://data-base-4e0f8-default-rtdb.firebaseio.com/usuarios/${usuario}.json`;
 
-            // HILO EN SEGUNDO PLANO (WEB WORKER) - Evita que el navegador congele el latido
+            // HILO EN SEGUNDO PLANO (WEB WORKER - Anti-congelamiento al minimizar)
             const workerCode = `
                 let url = "";
                 self.onmessage = function(e) {
@@ -93,18 +168,19 @@
                 const consola = document.getElementById('consolaWeb');
                 const hora = new Date().toLocaleTimeString();
                 if (e.data === 'ok') {
-                    consola.innerHTML = `[✓] Señal enviada con éxito a las ${hora}<br>Estado: PROTEGIDO ANTI-MINIMIZAR`;
-                    consola.style.color = "#0f0";
+                    // Mantiene el estado de protección visible
+                    if(!consola.innerHTML.includes("rotados")) {
+                        consola.innerHTML = `[✓] Señal enviada a las ${hora}<br>Estado: PROTEGIDO (Rotación activa)`;
+                        consola.style.color = "#0f0";
+                    }
                 } else {
-                    consola.innerHTML = `[x] Fallo de conexión a las ${hora}<br>Reintentando...`;
+                    consola.innerHTML = `[x] Fallo de red a las ${hora}<br>Reintentando...`;
                     consola.style.color = "red";
                 }
             };
 
-            // Iniciar el worker
             worker.postMessage({ type: 'start', url: firebaseUrl });
             
-            // Si cierra la pestaña de verdad, enviamos el 0
             window.addEventListener('beforeunload', () => { 
                 navigator.sendBeacon(firebaseUrl, JSON.stringify({ ultimo_latido: 0 })); 
             });
