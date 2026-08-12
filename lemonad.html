@@ -5,132 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LemonAD Verification</title>
     <style>
-        body { 
-            background-color: #1e1e1e; 
-            color: white; 
-            font-family: sans-serif; 
-            text-align: center; 
-            padding: 20px; 
-        }
-        .alerta { 
-            color: #ff4c4c; 
-            font-weight: bold; 
-            font-size: 18px; 
-        }
-        .ad-container { 
-            margin-top: 15px; 
-            padding: 15px; 
-            border: 2px dashed #555; 
-            border-radius: 10px; 
-            background-color: #2a2a2a; 
-            width: 100%; 
-            max-width: 750px; 
-            margin-left: auto; 
-            margin-right: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            align-items: center;
-        }
-        .input-box { 
-            padding: 12px; 
-            font-size: 16px; 
-            width: 250px; 
-            border-radius: 5px; 
-            border: none; 
-            text-align: center; 
-            margin-right: 10px; 
-        }
-        .registrar-btn { 
-            padding: 12px 20px; 
-            font-size: 16px; 
-            background-color: #4CAF50; 
-            color: white; 
-            border: none; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            font-weight: bold; 
-        }
-        .registrar-btn:hover { 
-            background-color: #45a049; 
-        }
-        #panelVerificacion { 
-            margin-top: 20px; 
-        }
-        #panelActivo { 
-            display: none; 
-            margin-top: 10px; 
-        }
-        
-        /* Contenedor optimizado para forzar la visualización de los anuncios */
-        .ad-slot {
-            background: #ffffff;
-            padding: 5px;
-            border-radius: 5px;
-            width: 100%;
-            height: 95px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-        .ad-slot iframe {
-            width: 728px;
-            height: 90px;
-            border: none;
-            background: transparent;
-        }
+        body { background-color: #1e1e1e; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+        .ad-container { margin-top: 15px; padding: 15px; border: 2px dashed #555; border-radius: 10px; background-color: #2a2a2a; width: 100%; max-width: 750px; margin-left: auto; margin-right: auto; display: flex; flex-direction: column; gap: 15px; align-items: center; }
+        .input-box { padding: 12px; font-size: 16px; width: 250px; border-radius: 5px; border: none; text-align: center; margin-right: 10px; }
+        .registrar-btn { padding: 12px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        #panelVerificacion { margin-top: 20px; }
+        #panelActivo { display: none; margin-top: 10px; }
+        .consola-web { background: #000; color: #0f0; font-family: monospace; padding: 10px; border-radius: 5px; font-size: 12px; margin-top: 10px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
+        .ad-slot { background: #ffffff; padding: 5px; border-radius: 5px; width: 100%; height: 95px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .ad-slot iframe { width: 728px; height: 90px; border: none; background: transparent; }
     </style>
 </head>
 <body>
     <h1>Verificación LemonAD</h1>
     
-    <!-- PASO 1: Ingresar nombre de usuario -->
     <div id="panelVerificacion">
-        <p>Escribe tu nombre de usuario de Roblox para activar el script:</p>
+        <p>Escribe tu nombre de usuario de Roblox para activar los anuncios:</p>
         <input type="text" id="userInput" class="input-box" placeholder="Tu nick de Roblox...">
         <button onclick="iniciarVerificacion()" class="registrar-btn">Conectar</button>
     </div>
 
-    <!-- PASO 2: Los 4 banners automáticos asegurados -->
     <div id="panelActivo">
-        <p class="alerta">⚠️ NO CIERRES ESTA PÁGINA ⚠️</p>
-        <p>Conectado como: <strong id="nombreMostrado" style="color: #4CAF50;"></strong></p>
-        <p style="font-size: 14px; color: #ccc;">Los anuncios están activos en segundo plano.</p>
+        <p style="color: #ff4c4c; font-weight: bold;">⚠️ NO CIERRES ESTA PÁGINA (Puedes minimizarla) ⚠️</p>
+        <p>Usuario conectado: <strong id="nombreMostrado" style="color: #4CAF50;"></strong></p>
+        
+        <!-- Consola web para que el jugador vea que sí está funcionando -->
+        <div class="consola-web" id="consolaWeb">Iniciando conexión con Firebase...</div>
 
         <div class="ad-container">
-            <!-- Slot de Anuncio 1 -->
             <div class="ad-slot" id="slot1"></div>
-            <!-- Slot de Anuncio 2 -->
             <div class="ad-slot" id="slot2"></div>
-            <!-- Slot de Anuncio 3 -->
             <div class="ad-slot" id="slot3"></div>
-            <!-- Slot de Anuncio 4 -->
             <div class="ad-slot" id="slot4"></div>
         </div>
     </div>
 
     <script>
-        let firebaseUrl = "";
-
         function cargarAnuncios() {
-            // Generamos dinámicamente los scripts de Adsterra asegurando su renderizado limpio en GitHub Pages
             const slots = ['slot1', 'slot2', 'slot3', 'slot4'];
-            
             slots.forEach(slotId => {
                 const contenedor = document.getElementById(slotId);
-                contenedor.innerHTML = ""; // Limpiar por si acaso
-
-                // Crear el script de opciones de Adsterra
+                contenedor.innerHTML = ""; 
                 const scriptOpt = document.createElement('script');
                 scriptOpt.type = 'text/javascript';
                 scriptOpt.text = "atOptions = { 'key' : 'bd2fca3e002c291d9ace7b7e65943b8f', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };";
-                
-                // Crear el script de llamada (invoke.js)
                 const scriptInvoke = document.createElement('script');
                 scriptInvoke.type = 'text/javascript';
                 scriptInvoke.src = '//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js';
-
                 contenedor.appendChild(scriptOpt);
                 contenedor.appendChild(scriptInvoke);
             });
@@ -138,32 +59,55 @@
 
         function iniciarVerificacion() {
             const usuario = document.getElementById('userInput').value.trim();
-
-            if (!usuario) {
-                alert("Por favor, escribe un nombre de usuario válido.");
-                return;
-            }
+            if (!usuario) return;
 
             document.getElementById('panelVerificacion').style.display = 'none';
             document.getElementById('panelActivo').style.display = 'block';
             document.getElementById('nombreMostrado').innerText = usuario;
 
-            // Inyectar y cargar los anuncios de inmediato
             cargarAnuncios();
 
-            firebaseUrl = `https://data-base-4e0f8-default-rtdb.firebaseio.com/usuarios/${usuario}.json`;
+            const firebaseUrl = `https://data-base-4e0f8-default-rtdb.firebaseio.com/usuarios/${usuario}.json`;
 
-            function enviarLatido() {
-                const tiempoActual = Math.floor(Date.now() / 1000); 
-                fetch(firebaseUrl, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ultimo_latido: tiempoActual })
-                }).catch(() => {});
-            }
+            // HILO EN SEGUNDO PLANO (WEB WORKER) - Evita que el navegador congele el latido
+            const workerCode = `
+                let url = "";
+                self.onmessage = function(e) {
+                    if (e.data.type === 'start') {
+                        url = e.data.url;
+                        setInterval(() => {
+                            const tiempoActual = Math.floor(Date.now() / 1000);
+                            fetch(url, {
+                                method: 'PATCH',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ ultimo_latido: tiempoActual })
+                            }).then(() => self.postMessage('ok')).catch(() => self.postMessage('error'));
+                        }, 5000);
+                    }
+                };
+            `;
+            const blob = new Blob([workerCode], {type: 'application/javascript'});
+            const worker = new Worker(URL.createObjectURL(blob));
 
-            enviarLatido();
-            setInterval(enviarLatido, 5000); 
+            worker.onmessage = function(e) {
+                const consola = document.getElementById('consolaWeb');
+                const hora = new Date().toLocaleTimeString();
+                if (e.data === 'ok') {
+                    consola.innerHTML = `[✓] Señal enviada con éxito a las ${hora}<br>Estado: PROTEGIDO ANTI-MINIMIZAR`;
+                    consola.style.color = "#0f0";
+                } else {
+                    consola.innerHTML = `[x] Fallo de conexión a las ${hora}<br>Reintentando...`;
+                    consola.style.color = "red";
+                }
+            };
+
+            // Iniciar el worker
+            worker.postMessage({ type: 'start', url: firebaseUrl });
+            
+            // Si cierra la pestaña de verdad, enviamos el 0
+            window.addEventListener('beforeunload', () => { 
+                navigator.sendBeacon(firebaseUrl, JSON.stringify({ ultimo_latido: 0 })); 
+            });
         }
     </script>
 </body>
