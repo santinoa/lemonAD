@@ -7,7 +7,7 @@
     <style>
         body { background-color: #1e1e1e; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
         .alerta { color: #ff4c4c; font-weight: bold; font-size: 20px; }
-        .ad-container { margin-top: 30px; padding: 25px; border: 2px dashed #555; border-radius: 10px; background-color: #2a2a2a; min-height: 100px; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+        .ad-container { margin-top: 30px; padding: 25px; border: 2px dashed #555; border-radius: 10px; background-color: #2a2a2a; min-height: 100px; }
         .input-box { padding: 12px; font-size: 16px; width: 250px; border-radius: 5px; border: none; text-align: center; margin-right: 10px; }
         .registrar-btn { padding: 12px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
         .registrar-btn:hover { background-color: #45a049; }
@@ -32,22 +32,10 @@
         <p>Si cierras esta pestaña, serás expulsado del juego automáticamente.</p>
 
         <div class="ad-container">
-            <p style="color: #aaa; margin-bottom: 10px;">Publicidad Patrocinada:</p>
+            <p style="color: #aaa; margin-bottom: 10px;">Cargando publicidad patrocinada...</p>
             
-            <!-- AQUÍ VA EL CÓDIGO DE ANUNCIO AUTOMÁTICO DE ADSTERRA (Banner o Social Bar) -->
-            <!-- Si tienes un código de banner tipo script de Adsterra, pégalo aquí abajo: -->
+            <!-- PEGA AQUÍ EL CÓDIGO DE TU BANNER O SOCIAL BAR DE ADSTERRA -->
             
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : 'bd2fca3e002c291d9ace7b7e65943b8f',
-                    'format' : 'iframe',
-                    'height' : 90,
-                    'width' : 728,
-                    'params' : {}
-                };
-            </script>
-            <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
-
         </div>
     </div>
 
@@ -81,7 +69,7 @@
             setInterval(enviarLatido, 5000); 
         }
 
-        // TRUCO DE CIERRE: Si el usuario cierra o recarga la pestaña, borramos el latido al instante
+        // Si cierra la pestaña, manda un latido en 0 para que Roblox lo saque al instante
         window.addEventListener('beforeunload', function () {
             if (firebaseUrl) {
                 navigator.sendBeacon(firebaseUrl, JSON.stringify({ ultimo_latido: 0 }));
