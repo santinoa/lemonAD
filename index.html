@@ -5,16 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LemonAD Verification</title>
     <style>
-        body { background-color: #1e1e1e; color: white; font-family: sans-serif; text-align: center; padding: 40px; overflow-x: hidden; }
+        body { background-color: #1e1e1e; color: white; font-family: sans-serif; text-align: center; padding: 20px; overflow-x: hidden; }
         .alerta { color: #ff4c4c; font-weight: bold; font-size: 18px; }
         
+        /* Estructura general de 3 columnas para los banners a los costados */
+        .main-layout {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .side-banner {
+            width: 160px;
+            min-height: 600px;
+            background-color: #2a2a2a;
+            border: 2px dashed #555;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .center-content {
+            flex: 1;
+            max-width: 500px;
+        }
+
         .box-verificacion {
             background-color: #2a2a2a;
             padding: 30px;
             border-radius: 12px;
             border: 2px dashed #555;
-            max-width: 500px;
-            margin: 0 auto;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
@@ -25,12 +52,17 @@
         #panelVerificacion { margin-top: 20px; }
         #panelActivo { display: none; margin-top: 20px; }
         
-        .consola-web { background: #000; color: #0f0; font-family: monospace; padding: 15px; border-radius: 5px; font-size: 12px; margin-top: 20px; text-align: left; max-width: 450px; margin-left: auto; margin-right: auto; }
+        .consola-web { background: #000; color: #0f0; font-family: monospace; padding: 15px; border-radius: 5px; font-size: 12px; margin-top: 20px; text-align: left; }
 
         #pantallaAdBlock {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background-color: #1a0000; z-index: 99999; flex-direction: column; 
             justify-content: center; align-items: center; padding: 20px; text-align: center;
+        }
+
+        /* Ocultar banners laterales en celulares para que no rompan el diseño */
+        @media (max-width: 900px) {
+            .side-banner { display: none; }
         }
     </style>
 </head>
@@ -43,24 +75,60 @@
     </div>
 
     <h1>Verificación LemonAD</h1>
-    
-    <div class="box-verificacion">
-        <div id="panelVerificacion">
-            <p>Escribe tu nombre de usuario de Roblox para conectar:</p>
-            <input type="text" id="userInput" class="input-box" placeholder="Tu nick de Roblox...">
-            <br><br>
-            <button onclick="iniciarVerificacion()" class="registrar-btn">Conectar</button>
+
+    <!-- CONTENEDOR PRINCIPAL (Banners a los costados + Panel central) -->
+    <div class="main-layout">
+        
+        <!-- BANNER IZQUIERDO (Skyscraper 160x600) -->
+        <div class="side-banner">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : 'bd2fca3e002c291d9ace7b7e65943b8f',
+                    'format' : 'iframe',
+                    'height' : 600,
+                    'width' : 160,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
         </div>
 
-        <div id="panelActivo">
-            <p class="alerta">⚠️ NO CIERRES ESTA PÁGINA (Puedes minimizarla) ⚠️</p>
-            <p>Conectado como: <strong id="nombreMostrado" style="color: #4CAF50;"></strong></p>
-            <p style="color: #f1c40f; font-weight: bold; margin-top: 15px;">Siguiente anuncio en: <span id="tiempoAnuncio">30</span> segundos</p>
-            <p style="font-size: 14px; color: #ccc;">Si cierras esta pestaña, serás expulsado del juego automáticamente.</p>
+        <!-- CONTENIDO CENTRAL -->
+        <div class="center-content">
+            <div class="box-verificacion">
+                <div id="panelVerificacion">
+                    <p>Escribe tu nombre de usuario de Roblox para conectar:</p>
+                    <input type="text" id="userInput" class="input-box" placeholder="Tu nick de Roblox...">
+                    <br><br>
+                    <button onclick="iniciarVerificacion()" class="registrar-btn">Conectar</button>
+                </div>
+
+                <div id="panelActivo">
+                    <p class="alerta">⚠️ NO CIERRES ESTA PÁGINA (Puedes minimizarla) ⚠️</p>
+                    <p>Conectado como: <strong id="nombreMostrado" style="color: #4CAF50;"></strong></p>
+                    <p style="color: #f1c40f; font-weight: bold; margin-top: 15px;">Siguiente anuncio en: <span id="tiempoAnuncio">30</span> segundos</p>
+                    <p style="font-size: 14px; color: #ccc;">Si cierras esta pestaña, serás expulsado del juego automáticamente.</p>
+                </div>
+            </div>
+
+            <div class="consola-web" id="consolaWeb" style="display: none;">Iniciando conexión con Firebase...</div>
         </div>
+
+        <!-- BANNER DERECHO (Skyscraper 160x600) -->
+        <div class="side-banner">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : 'bd2fca3e002c291d9ace7b7e65943b8f',
+                    'format' : 'iframe',
+                    'height' : 600,
+                    'width' : 160,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//www.effectivecpmnetwork.com/bd2fca3e002c291d9ace7b7e65943b8f/invoke.js"></script>
+        </div>
+
     </div>
-
-    <div class="consola-web" id="consolaWeb" style="display: none;">Iniciando conexión con Firebase...</div>
 
     <script>
         function detectarBloqueador() {
@@ -103,21 +171,19 @@
             const consola = document.getElementById('consolaWeb');
             consola.style.display = 'block';
 
-            // Función para abrir el anuncio y programar su cierre a los 20 segundos
+            // Función para abrir el enlace directo y cerrarlo a los 20 segundos
             function abrirYAbrirAnuncio() {
                 const adWindow = window.open("https://temptedrecognise.com/s9s30c47?key=c6673264c5574c4873f2fe85ccf7f9bf", "_blank");
                 if (adWindow) {
                     setTimeout(() => {
                         try {
                             adWindow.close();
-                        } catch (e) {
-                            // Los navegadores pueden bloquear el cierre automático de dominios externos por seguridad
-                        }
-                    }, 20000); // Cierra a los 20 segundos
+                        } catch (e) {}
+                    }, 20000);
                 }
             }
 
-            // Apertura inicial al hacer clic
+            // Apertura inicial al hacer clic en conectar
             abrirYAbrirAnuncio();
 
             // Temporizador visual y automático cada 30 segundos
