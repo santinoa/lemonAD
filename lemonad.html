@@ -7,16 +7,41 @@
     <style>
         body { background-color: #1e1e1e; color: white; font-family: sans-serif; text-align: center; padding: 30px; overflow-x: hidden; }
         .alerta { color: #ff4c4c; font-weight: bold; font-size: 18px; }
-        .ad-container { margin-top: 20px; padding: 10px; border: 2px dashed #555; border-radius: 10px; background-color: #2a2a2a; width: 100%; max-width: 728px; margin-left: auto; margin-right: auto; }
+        
+        /* Contenedor profesional para el enlace patrocinado */
+        .ad-container { 
+            margin-top: 20px; 
+            padding: 20px; 
+            border: 2px solid #f1c40f; 
+            border-radius: 10px; 
+            background: linear-gradient(135deg, #2c3e50, #1a1a1a); 
+            width: 100%; 
+            max-width: 728px; 
+            margin-left: auto; 
+            margin-right: auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .ad-link {
+            display: block;
+            text-decoration: none;
+            color: white;
+            padding: 15px;
+            border-radius: 6px;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .ad-link:hover {
+            transform: scale(1.01);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .ad-title { font-size: 20px; font-weight: bold; color: #f1c40f; margin-bottom: 8px; }
+        .ad-sub { font-size: 14px; color: #ccc; }
+
         .input-box { padding: 12px; font-size: 16px; width: 250px; border-radius: 5px; border: none; text-align: center; margin-right: 10px; }
         .registrar-btn { padding: 12px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
         .registrar-btn:hover { background-color: #45a049; }
         #panelVerificacion { margin-top: 20px; }
         #panelActivo { display: none; margin-top: 20px; }
         
-        /* Iframe optimizado del sistema que funciona perfecto */
-        iframe { width: 100%; height: 400px; border: none; border-radius: 5px; background: white; }
-
         .consola-web { background: #000; color: #0f0; font-family: monospace; padding: 10px; border-radius: 5px; font-size: 12px; margin-top: 15px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
 
         /* PANTALLA DE BLOQUEO PARA BRAVE Y ADBLOCK */
@@ -29,7 +54,7 @@
 </head>
 <body>
 
-    <!-- BLOQUEO ESTRICTO DE ADBLOCK / BRAVE (Optimizado sin falsos positivos) -->
+    <!-- BLOQUEO ESTRICTO DE ADBLOCK / BRAVE -->
     <div id="pantallaAdBlock">
         <h1 style="color: #ff4c4c; font-size: 35px;">⚠️ BLOQUEADOR DE ANUNCIOS DETECTADO ⚠️</h1>
         <p style="font-size: 18px; max-width: 600px; color: white;">Estás utilizando Brave (con los escudos activos) o una extensión como AdBlock / uBlock.</p>
@@ -45,24 +70,27 @@
         <button onclick="iniciarVerificacion()" class="registrar-btn">Conectar</button>
     </div>
 
-    <!-- PASO 2: Carga del sistema de anuncios y consola de estado -->
+    <!-- PASO 2: Panel activo con el nuevo enlace directo integrado -->
     <div id="panelActivo">
         <p class="alerta">⚠️ NO CIERRES ESTA PÁGINA (Puedes minimizarla) ⚠️</p>
         <p>Conectado como: <strong id="nombreMostrado" style="color: #4CAF50;"></strong></p>
         <p>Si cierras esta pestaña, serás expulsado del juego automáticamente.</p>
 
         <div class="ad-container">
-            <p style="color: #aaa; margin-bottom: 10px; font-size: 14px;">Publicidad Patrocinada:</p>
+            <p style="color: #aaa; margin-bottom: 10px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">Publicidad Patrocinada del Servidor</p>
             
-            <!-- Sistema de anuncios directo que funciona perfectamente -->
-            <iframe src="https://www.effectivecpmnetwork.com/i1nqhh7zb?key=bd2fca3e002c291d9ace7b7e65943b8f"></iframe>
+            <!-- Nuevo enlace directo integrado -->
+            <a href="https://temptedrecognise.com/s9s30c47?key=c6673264c5574c4873f2fe85ccf7f9bf" target="_blank" class="ad-link">
+                <div class="ad-title">🚀 Haz clic aquí para apoyar y verificar el acceso a Roblox</div>
+                <div class="ad-sub">Colabora con la comunidad para mantener los servidores activos y seguros.</div>
+            </a>
         </div>
 
         <div class="consola-web" id="consolaWeb">Iniciando conexión con Firebase...</div>
     </div>
 
     <script>
-        // DETECTOR SEGURO DE ADBLOCK (Sin falsos positivos en Chrome vanilla)
+        // DETECTOR SEGURO DE ADBLOCK
         function detectarBloqueador() {
             const cebo = document.createElement('div');
             cebo.className = 'pub_300x250 adsbox ad-slot';
@@ -102,7 +130,7 @@
 
             firebaseUrl = `https://data-base-4e0f8-default-rtdb.firebaseio.com/usuarios/${usuario}.json`;
 
-            // WEB WORKER EN SEGUNDO PLANO (Evita que el navegador pause el temporizador al minimizar la pestaña)
+            // WEB WORKER EN SEGUNDO PLANO (Evita que el navegador pause el temporizador al minimizar)
             const workerCode = `
                 let url = "";
                 self.onmessage = function(e) {
