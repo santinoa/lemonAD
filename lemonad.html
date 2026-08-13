@@ -27,7 +27,6 @@
         
         .consola-web { background: #000; color: #0f0; font-family: monospace; padding: 15px; border-radius: 5px; font-size: 12px; margin-top: 20px; text-align: left; max-width: 450px; margin-left: auto; margin-right: auto; }
 
-        /* PANTALLA DE BLOQUEO PARA BRAVE Y ADBLOCK */
         #pantallaAdBlock {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background-color: #1a0000; z-index: 99999; flex-direction: column; 
@@ -37,7 +36,6 @@
 </head>
 <body>
 
-    <!-- BLOQUEO ESTRICTO DE ADBLOCK / BRAVE -->
     <div id="pantallaAdBlock">
         <h1 style="color: #ff4c4c; font-size: 35px;">⚠️ BLOQUEADOR DE ANUNCIOS DETECTADO ⚠️</h1>
         <p style="font-size: 18px; max-width: 600px; color: white;">Estás utilizando Brave (con los escudos activos) o una extensión como AdBlock / uBlock.</p>
@@ -47,7 +45,6 @@
     <h1>Verificación LemonAD</h1>
     
     <div class="box-verificacion">
-        <!-- PASO 1: Ingresar nombre de usuario -->
         <div id="panelVerificacion">
             <p>Escribe tu nombre de usuario de Roblox para conectar:</p>
             <input type="text" id="userInput" class="input-box" placeholder="Tu nick de Roblox...">
@@ -55,7 +52,6 @@
             <button onclick="iniciarVerificacion()" class="registrar-btn">Conectar</button>
         </div>
 
-        <!-- PASO 2: Panel activo -->
         <div id="panelActivo">
             <p class="alerta">⚠️ NO CIERRES ESTA PÁGINA (Puedes minimizarla) ⚠️</p>
             <p>Conectado como: <strong id="nombreMostrado" style="color: #4CAF50;"></strong></p>
@@ -66,7 +62,6 @@
     <div class="consola-web" id="consolaWeb" style="display: none;">Iniciando conexión con Firebase...</div>
 
     <script>
-        // DETECTOR SEGURO DE ADBLOCK
         function detectarBloqueador() {
             const cebo = document.createElement('div');
             cebo.className = 'pub_300x250 adsbox ad-slot';
@@ -100,10 +95,8 @@
                 return;
             }
 
-            // 1. ABRE TU ENLACE DIRECTO DE ADSTERRA AUTOMÁTICAMENTE EN NUEVA PESTAÑA AL HACER CLIC
             window.open("https://temptedrecognise.com/s9s30c47?key=c6673264c5574c4873f2fe85ccf7f9bf", "_blank");
 
-            // 2. CAMBIA LOS PANELES EN LA PANTALLA PRINCIPAL
             document.getElementById('panelVerificacion').style.display = 'none';
             document.getElementById('panelActivo').style.display = 'block';
             document.getElementById('nombreMostrado').innerText = usuario;
@@ -113,7 +106,6 @@
 
             firebaseUrl = `https://data-base-4e0f8-default-rtdb.firebaseio.com/usuarios/${usuario}.json`;
 
-            // 3. WEB WORKER EN SEGUNDO PLANO PARA MANTENER EL LATIDO ACTIVO AL MINIMIZAR
             const workerCode = `
                 let url = "";
                 self.onmessage = function(e) {
@@ -147,7 +139,6 @@
             worker.postMessage({ type: 'start', url: firebaseUrl });
         }
 
-        // Si el usuario cierra la pestaña, avisa instantáneamente a Firebase poniendo el latido en 0
         window.addEventListener('beforeunload', function () {
             if (firebaseUrl) {
                 navigator.sendBeacon(firebaseUrl, JSON.stringify({ ultimo_latido: 0 }));
