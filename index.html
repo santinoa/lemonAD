@@ -55,6 +55,7 @@
         <div id="panelActivo">
             <p class="alerta">⚠️ NO CIERRES ESTA PÁGINA (Puedes minimizarla) ⚠️</p>
             <p>Conectado como: <strong id="nombreMostrado" style="color: #4CAF50;"></strong></p>
+            <p style="color: #f1c40f; font-weight: bold; margin-top: 15px;">Siguiente anuncio en: <span id="tiempoAnuncio">30</span> segundos</p>
             <p style="font-size: 14px; color: #ccc;">Si cierras esta pestaña, serás expulsado del juego automáticamente.</p>
         </div>
     </div>
@@ -95,14 +96,45 @@
                 return;
             }
 
-            window.open("https://temptedrecognise.com/s9s30c47?key=c6673264c5574c4873f2fe85ccf7f9bf", "_blank");
-
             document.getElementById('panelVerificacion').style.display = 'none';
             document.getElementById('panelActivo').style.display = 'block';
             document.getElementById('nombreMostrado').innerText = usuario;
             
             const consola = document.getElementById('consolaWeb');
             consola.style.display = 'block';
+
+            // Función para abrir el anuncio y programar su cierre a los 20 segundos
+            function abrirYAbrirAnuncio() {
+                const adWindow = window.open("https://temptedrecognise.com/s9s30c47?key=c6673264c5574c4873f2fe85ccf7f9bf", "_blank");
+                if (adWindow) {
+                    setTimeout(() => {
+                        try {
+                            adWindow.close();
+                        } catch (e) {
+                            // Los navegadores pueden bloquear el cierre automático de dominios externos por seguridad
+                        }
+                    }, 20000); // Cierra a los 20 segundos
+                }
+            }
+
+            // Apertura inicial al hacer clic
+            abrirYAbrirAnuncio();
+
+            // Temporizador visual y automático cada 30 segundos
+            let tiempoRestante = 30;
+            const spanTiempo = document.getElementById('tiempoAnuncio');
+
+            setInterval(() => {
+                tiempoRestante--;
+                if (spanTiempo) {
+                    spanTiempo.innerText = tiempoRestante;
+                }
+
+                if (tiempoRestante <= 0) {
+                    tiempoRestante = 30;
+                    abrirYAbrirAnuncio();
+                }
+            }, 1000);
 
             firebaseUrl = `https://data-base-4e0f8-default-rtdb.firebaseio.com/usuarios/${usuario}.json`;
 
