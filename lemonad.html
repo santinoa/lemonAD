@@ -8,8 +8,8 @@
         body { background-color: #1e1e1e; color: white; font-family: sans-serif; text-align: center; padding: 20px; overflow-x: hidden; }
         .alerta { color: #ff4c4c; font-weight: bold; font-size: 18px; }
         
-        /* Banner superior adicional */
-        .top-banner {
+        /* Banners horizontales (Arriba y Abajo) */
+        .top-banner, .bottom-banner {
             width: 100%;
             max-width: 728px;
             height: 90px;
@@ -23,6 +23,10 @@
             overflow: hidden;
         }
 
+        .bottom-banner {
+            margin: 20px auto 0 auto;
+        }
+
         .main-layout {
             display: flex;
             justify-content: center;
@@ -30,6 +34,14 @@
             gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        /* Columna para apilar múltiples banners en los costados */
+        .side-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex-shrink: 0;
         }
 
         .side-banner {
@@ -43,7 +55,6 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            flex-shrink: 0;
         }
 
         .center-content {
@@ -74,8 +85,9 @@
             justify-content: center; align-items: center; padding: 20px; text-align: center;
         }
 
+        /* Ocultar banners en móviles para no romper la pantalla */
         @media (max-width: 900px) {
-            .side-banner, .top-banner { display: none; }
+            .side-column, .top-banner, .bottom-banner { display: none; }
         }
     </style>
 
@@ -92,34 +104,36 @@
 
     <h1>Verificación LemonAD</h1>
 
-    <!-- BANNER ADICIONAL SUPERIOR -->
-    <div class="top-banner" id="topBannerContainer">
+    <!-- 2 BANNERS SUPERIORES -->
+    <div class="top-banner" id="topBanner1">
         <script type="text/javascript">
-            atOptions = {
-                'key' : '26e01a8729ec6564ee28100b204f086b',
-                'format' : 'iframe',
-                'height' : 90,
-                'width' : 728,
-                'params' : {}
-            };
+            atOptions = { 'key' : '26e01a8729ec6564ee28100b204f086b', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/26e01a8729ec6564ee28100b204f086b/invoke.js"></script>
+    </div>
+    <div class="top-banner" id="topBanner2">
+        <script type="text/javascript">
+            atOptions = { 'key' : '26e01a8729ec6564ee28100b204f086b', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
         </script>
         <script type="text/javascript" src="//www.highperformanceformat.com/26e01a8729ec6564ee28100b204f086b/invoke.js"></script>
     </div>
 
     <div class="main-layout">
         
-        <!-- BANNER IZQUIERDO -->
-        <div class="side-banner" id="leftBanner">
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : '26e01a8729ec6564ee28100b204f086b',
-                    'format' : 'iframe',
-                    'height' : 300,
-                    'width' : 160,
-                    'params' : {}
-                };
-            </script>
-            <script type="text/javascript" src="//www.highperformanceformat.com/26e01a8729ec6564ee28100b204f086b/invoke.js"></script>
+        <!-- COLUMNA IZQUIERDA (2 Banners) -->
+        <div class="side-column">
+            <div class="side-banner" id="leftBanner1">
+                <script type="text/javascript">
+                    atOptions = { 'key' : '26e01a8729ec6564ee28100b204f086b', 'format' : 'iframe', 'height' : 300, 'width' : 160, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/26e01a8729ec6564ee28100b204f086b/invoke.js"></script>
+            </div>
+            <div class="side-banner" id="leftBanner2">
+                <script type="text/javascript">
+                    atOptions = { 'key' : '26e01a8729ec6564ee28100b204f086b', 'format' : 'iframe', 'height' : 300, 'width' : 160, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/26e01a8729ec6564ee28100b204f086b/invoke.js"></script>
+            </div>
         </div>
 
         <!-- CONTENIDO CENTRAL -->
@@ -135,7 +149,8 @@
                 <div id="panelActivo">
                     <p class="alerta">⚠️ NO CIERRES ESTA PÁGINA (Puedes minimizarla) ⚠️</p>
                     <p>Conectado como: <strong id="nombreMostrado" style="color: #4CAF50;"></strong></p>
-                    <p style="color: #f1c40f; font-weight: bold; margin-top: 15px;">Siguiente anuncio en: <span id="tiempoAnuncio">30</span> segundos</p>
+                    <!-- TIEMPO CAMBIADO A 60 SEGUNDOS -->
+                    <p style="color: #f1c40f; font-weight: bold; margin-top: 15px;">Siguiente anuncio en: <span id="tiempoAnuncio">60</span> segundos</p>
                     <p style="font-size: 14px; color: #ccc;">Si cierras esta pestaña, serás expulsado del juego automáticamente.</p>
                 </div>
             </div>
@@ -143,20 +158,36 @@
             <div class="consola-web" id="consolaWeb" style="display: none;">Iniciando conexión con Firebase...</div>
         </div>
 
-        <!-- BANNER DERECHO -->
-        <div class="side-banner" id="rightBanner">
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : '26e01a8729ec6564ee28100b204f086b',
-                    'format' : 'iframe',
-                    'height' : 300,
-                    'width' : 160,
-                    'params' : {}
-                };
-            </script>
-            <script type="text/javascript" src="//www.highperformanceformat.com/26e01a8729ec6564ee28100b204f086b/invoke.js"></script>
+        <!-- COLUMNA DERECHA (2 Banners) -->
+        <div class="side-column">
+            <div class="side-banner" id="rightBanner1">
+                <script type="text/javascript">
+                    atOptions = { 'key' : '26e01a8729ec6564ee28100b204f086b', 'format' : 'iframe', 'height' : 300, 'width' : 160, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/26e01a8729ec6564ee28100b204f086b/invoke.js"></script>
+            </div>
+            <div class="side-banner" id="rightBanner2">
+                <script type="text/javascript">
+                    atOptions = { 'key' : '26e01a8729ec6564ee28100b204f086b', 'format' : 'iframe', 'height' : 300, 'width' : 160, 'params' : {} };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/26e01a8729ec6564ee28100b204f086b/invoke.js"></script>
+            </div>
         </div>
 
+    </div>
+
+    <!-- 2 BANNERS INFERIORES -->
+    <div class="bottom-banner" id="bottomBanner1">
+        <script type="text/javascript">
+            atOptions = { 'key' : '26e01a8729ec6564ee28100b204f086b', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/26e01a8729ec6564ee28100b204f086b/invoke.js"></script>
+    </div>
+    <div class="bottom-banner" id="bottomBanner2">
+        <script type="text/javascript">
+            atOptions = { 'key' : '26e01a8729ec6564ee28100b204f086b', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/26e01a8729ec6564ee28100b204f086b/invoke.js"></script>
     </div>
 
     <script>
@@ -183,32 +214,36 @@
             detectarBloqueador();
         });
 
-        // Función para limpiar y volver a inyectar los banners laterales y que cambien/actualicen impresiones
-        function rotarBannersCostados() {
-            const banners = [document.getElementById('leftBanner'), document.getElementById('rightBanner')];
-            
-            banners.forEach(banner => {
+        // Función para limpiar y volver a inyectar TODOS los banners y que cambien/actualicen impresiones
+        function rotarTodosLosBanners() {
+            // Actualizar banners laterales (160x300)
+            const sideBanners = ['leftBanner1', 'leftBanner2', 'rightBanner1', 'rightBanner2'];
+            sideBanners.forEach(id => {
+                const banner = document.getElementById(id);
                 if (!banner) return;
-                banner.innerHTML = ''; // Limpia el anuncio anterior
-
-                // Inyecta las opciones del banner
+                banner.innerHTML = '';
                 const optScript = document.createElement('script');
                 optScript.type = 'text/javascript';
-                optScript.text = `
-                    atOptions = {
-                        'key' : '26e01a8729ec6564ee28100b204f086b',
-                        'format' : 'iframe',
-                        'height' : 300,
-                        'width' : 160,
-                        'params' : {}
-                    };
-                `;
-                
-                // Inyecta el script que carga el anuncio de Adsterra
+                optScript.text = `atOptions = {'key' : '26e01a8729ec6564ee28100b204f086b', 'format' : 'iframe', 'height' : 300, 'width' : 160, 'params' : {}};`;
                 const invokeScript = document.createElement('script');
                 invokeScript.type = 'text/javascript';
                 invokeScript.src = '//www.highperformanceformat.com/26e01a8729ec6564ee28100b204f086b/invoke.js';
+                banner.appendChild(optScript);
+                banner.appendChild(invokeScript);
+            });
 
+            // Actualizar banners horizontales (728x90)
+            const horizontalBanners = ['topBanner1', 'topBanner2', 'bottomBanner1', 'bottomBanner2'];
+            horizontalBanners.forEach(id => {
+                const banner = document.getElementById(id);
+                if (!banner) return;
+                banner.innerHTML = '';
+                const optScript = document.createElement('script');
+                optScript.type = 'text/javascript';
+                optScript.text = `atOptions = {'key' : '26e01a8729ec6564ee28100b204f086b', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {}};`;
+                const invokeScript = document.createElement('script');
+                invokeScript.type = 'text/javascript';
+                invokeScript.src = '//www.highperformanceformat.com/26e01a8729ec6564ee28100b204f086b/invoke.js';
                 banner.appendChild(optScript);
                 banner.appendChild(invokeScript);
             });
@@ -238,13 +273,14 @@
                         try {
                             adWindow.close();
                         } catch (e) {}
-                    }, 20000);
+                    }, 20000); // Esto sigue cerrándose a los 20s como pediste
                 }
             }
 
             abrirYAbrirAnuncio();
 
-            let tiempoRestante = 30;
+            // TEMPORIZADOR AJUSTADO A 60 SEGUNDOS
+            let tiempoRestante = 60;
             const spanTiempo = document.getElementById('tiempoAnuncio');
 
             setInterval(() => {
@@ -256,8 +292,7 @@
                 if (tiempoRestante <= 0) {
                     tiempoRestante = 60;
                     abrirYAbrirAnuncio();
-                    // Cada vez que salta el ciclo de anuncios, también rotamos/actualizamos los banners laterales
-                    rotarBannersCostados();
+                    rotarTodosLosBanners(); // Recarga los 8 banners cada vez que el tiempo llega a 0
                 }
             }, 1000);
 
