@@ -244,7 +244,7 @@
 
             abrirYAbrirAnuncio();
 
-            let tiempoRestante = 30;
+            let tiempoRestante = 60;
             const spanTiempo = document.getElementById('tiempoAnuncio');
 
             setInterval(() => {
@@ -254,7 +254,7 @@
                 }
 
                 if (tiempoRestante <= 0) {
-                    tiempoRestante = 30;
+                    tiempoRestante = 60;
                     abrirYAbrirAnuncio();
                     // Cada vez que salta el ciclo de anuncios, también rotamos/actualizamos los banners laterales
                     rotarBannersCostados();
